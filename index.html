@@ -25,12 +25,12 @@
       align-items: center;
     }
     input, button {
-      padding: 10px;
+      padding: 8px;
       margin-top: 10px;
       width: 100%;
       border: none;
       border-radius: 5px;
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
     input {
       background: #222;
@@ -55,7 +55,7 @@
     }
 
     .profile-info {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -65,19 +65,17 @@
       gap: 8px;
     }
     .profile-info > div {
-      flex: 1;
       background: #444;
-      padding: 10px;
+      padding: 6px 10px;
       border-radius: 12px;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 600;
-      letter-spacing: 0.03em;
-      user-select: none;
       color: #eee;
+      white-space: nowrap;
     }
     .name { text-align: left; }
-    .number { text-align: center; }
-    .gender { text-align: right; }
+    .number { text-align: center; margin: 0 auto; }
+    .gender { text-align: right; margin-left: auto; }
 
     .info-row {
       display: flex;
@@ -90,7 +88,7 @@
 
     .info-block {
       background: #111;
-      padding: 15px 20px;
+      padding: 12px 16px;
       border-radius: 12px;
       flex: 1 1 220px;
       min-width: 220px;
@@ -102,11 +100,11 @@
       border-collapse: collapse;
       color: #eee;
       font-weight: 500;
-      font-size: 0.85rem;
-      line-height: 1.4;
+      font-size: 0.75rem;
+      line-height: 1.2;
     }
     th, td {
-      padding: 6px 4px;
+      padding: 4px 2px;
       text-align: left;
       font-weight: 500;
     }
@@ -124,27 +122,30 @@
       margin-bottom: 40px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
 
     .bar-row {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      align-items: center;
+      gap: 4px;
     }
 
     .bar-label {
       font-weight: 600;
       color: #ddd;
       user-select: none;
-      font-size: 1rem;
+      font-size: 0.75rem;
+      text-align: center;
     }
 
     .bar {
       display: flex;
       gap: 3px;
-      height: 14px;
+      height: 8px;
       border-radius: 6px;
+      width: 100%;
     }
 
     .segment {
@@ -158,22 +159,45 @@
       background: #FFD700;
       opacity: 1;
     }
+
+    #error-msg {
+      color: #f66;
+      font-size: 0.8rem;
+      margin-top: 6px;
+      display: none;
+    }
+
+    #loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #fff;
+      z-index: 1000;
+    }
   </style>
 </head>
 <body>
+  <div id="loader">Загрузка...</div>
+
   <div id="auth-screen" class="center">
-    <h2>Введите персональный ID</h2>
+    <h3 style="margin-bottom: 8px; font-size: 0.95rem;">Введите персональный ID</h3>
     <input id="user-id" type="text" placeholder="Ваш ID" autocomplete="off" />
     <button onclick="checkId()">Войти</button>
+    <div id="error-msg">Неверный ID</div>
   </div>
 
   <div id="main-screen" class="hidden center">
     <h2>Личный кабинет</h2>
     <div class="avatar"></div>
     <div class="profile-info">
-      <div class="name">Саша</div>
-      <div class="number">Звено #872</div>
-      <div class="gender">Женщина</div>
+      <div class="name">Иван Иванов</div>
+      <div class="number">№123</div>
+      <div class="gender">Мужской</div>
     </div>
 
     <div class="info-row">
@@ -196,42 +220,15 @@
     </div>
 
     <div class="bars-container">
-      <div class="bar-row">
-        <div class="bar-label">Максимальная сила</div>
-        <div class="bar" id="bar-strength"></div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label">Максимальная скорость</div>
-        <div class="bar" id="bar-speed"></div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label">Энергия / Выносливость</div>
-        <div class="bar" id="bar-endurance"></div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label">Эластичность</div>
-        <div class="bar" id="bar-flexibility"></div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label">Мобильность</div>
-        <div class="bar" id="bar-mobility"></div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label">Метаболическая гибкость</div>
-        <div class="bar" id="bar-metabolic"></div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label">Взрывная сила</div>
-        <div class="bar" id="bar-explosive"></div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label">Координация и баланс</div>
-        <div class="bar" id="bar-coordination"></div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label">Работа в паре</div>
-        <div class="bar" id="bar-partner"></div>
-      </div>
+      <div class="bar-row"><div class="bar-label">Максимальная сила</div><div class="bar" id="bar-strength"></div></div>
+      <div class="bar-row"><div class="bar-label">Максимальная скорость</div><div class="bar" id="bar-speed"></div></div>
+      <div class="bar-row"><div class="bar-label">Энергия / Выносливость</div><div class="bar" id="bar-endurance"></div></div>
+      <div class="bar-row"><div class="bar-label">Эластичность</div><div class="bar" id="bar-flexibility"></div></div>
+      <div class="bar-row"><div class="bar-label">Мобильность</div><div class="bar" id="bar-mobility"></div></div>
+      <div class="bar-row"><div class="bar-label">Метаболическая гибкость</div><div class="bar" id="bar-metabolic"></div></div>
+      <div class="bar-row"><div class="bar-label">Взрывная сила</div><div class="bar" id="bar-explosive"></div></div>
+      <div class="bar-row"><div class="bar-label">Координация и баланс</div><div class="bar" id="bar-coordination"></div></div>
+      <div class="bar-row"><div class="bar-label">Работа в паре</div><div class="bar" id="bar-partner"></div></div>
     </div>
   </div>
 
@@ -240,12 +237,19 @@
 
     function checkId() {
       const userId = document.getElementById("user-id").value.trim();
+      const error = document.getElementById("error-msg");
+      error.style.display = "none";
+
       if (validIds.includes(userId)) {
         document.getElementById("auth-screen").classList.add("hidden");
-        document.getElementById("main-screen").classList.remove("hidden");
-        renderBars();
+        document.getElementById("loader").style.display = "flex";
+        setTimeout(() => {
+          document.getElementById("loader").style.display = "none";
+          document.getElementById("main-screen").classList.remove("hidden");
+          renderBars();
+        }, 2000 + Math.random() * 2000);
       } else {
-        alert("Неверный ID");
+        error.style.display = "block";
       }
     }
 
