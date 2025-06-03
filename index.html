@@ -2,123 +2,212 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Фитнес Дашборд</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .center {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    input, button {
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+      max-width: 300px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    input {
+      background: #222;
+      color: white;
+    }
+
+    button {
+      background: white;
+      color: black;
+      cursor: pointer;
+    }
+
+    .hidden { display: none; }
+    .loading {
+      border: 4px solid #333;
+      border-top: 4px solid #fff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin-top: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .progress {
+      width: 80%;
+      max-width: 300px;
+      background: #333;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+
+    .progress-fill {
+      height: 10px;
+      background: limegreen;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-around;
+      background: #111;
+      padding: 10px 0;
+      border-top: 1px solid #333;
+    }
+
+    nav button {
+      background: none;
+      color: #aaa;
+      font-size: 14px;
+      border: none;
+    }
+
+    nav button.active {
+      color: white;
+    }
+
+    .tab {
+      display: none;
+    }
+
+    .tab.active {
+      display: block;
+    }
+
+    table {
+      width: 100%;
+      max-width: 400px;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid #333;
+    }
+
+    th {
+      background: #111;
+    }
+  </style>
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col justify-between font-sans">
+<body>
 
-  <!-- Модальное окно -->
-  <div id="authModal" class="fixed inset-0 flex items-center justify-center bg-black z-50">
-    <div class="p-6 bg-gray-900 rounded-xl shadow-lg w-full max-w-sm text-center">
-      <h2 class="text-2xl font-semibold">Введите персональный ID</h2>
-      <input id="userIdInput" type="text" placeholder="Ваш ID"
-        class="mt-4 w-full p-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500" />
-      <button onclick="checkAccess()" class="mt-4 w-full bg-white text-black py-2 rounded-md hover:bg-gray-200">
-        Войти
-      </button>
-    </div>
+  <div id="auth-screen" class="center">
+    <h2>Введите персональный ID</h2>
+    <input id="user-id" type="text" placeholder="Ваш ID"/>
+    <button onclick="checkId()">Войти</button>
+    <div id="loader" class="loading hidden"></div>
   </div>
 
-  <!-- Загрузка -->
-  <div id="loader" class="hidden fixed inset-0 flex items-center justify-center bg-black z-40">
-    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-white"></div>
-  </div>
+  <div id="main-screen" class="hidden center" style="padding-bottom: 80px;">
+    <h1>Личный кабинет</h1>
+    <p>Ваш ID: <span id="id-display"></span></p>
+    <img src="https://i.imgur.com/gj4n4JN.gif" alt="3D Body" width="150" />
 
-  <!-- Контент -->
-  <main id="mainContent" class="hidden flex-grow flex flex-col items-center justify-center px-4 pt-6">
-    <div id="dashboard" class="text-center w-full max-w-md">
-      <h1 class="text-3xl font-bold mb-4">Личный кабинет</h1>
-      <p class="text-gray-400 mb-2" id="userInfo"></p>
-      <img src="3d_body.gif" alt="3D Body" class="w-40 h-auto mx-auto mb-4" />
-      <div class="text-sm space-y-1 mb-6">
-        <p>Рост: 180 см</p>
-        <p>Вес: 75 кг</p>
-        <p>Тип: Обезьяна 🐒</p>
-      </div>
-      <div class="w-full space-y-4 text-left">
-        <div>
-          <p>Сила</p>
-          <div class="w-full h-3 bg-gray-700 rounded-full">
-            <div class="h-full bg-green-500 rounded-full" style="width: 80%"></div>
-          </div>
-        </div>
-        <div>
-          <p>Скорость</p>
-          <div class="w-full h-3 bg-gray-700 rounded-full">
-            <div class="h-full bg-yellow-500 rounded-full" style="width: 70%"></div>
-          </div>
-        </div>
-        <div>
-          <p>Выносливость</p>
-          <div class="w-full h-3 bg-gray-700 rounded-full">
-            <div class="h-full bg-blue-500 rounded-full" style="width: 65%"></div>
-          </div>
-        </div>
-      </div>
+    <div style="margin-top: 20px; text-align: left;">
+      <p>Рост: 180 см</p>
+      <p>Вес: 75 кг</p>
+      <p>Тип: Обезьяна 🐒</p>
     </div>
 
-    <div id="workout" class="hidden text-left w-full max-w-md mt-6">
-      <h2 class="text-2xl font-semibold mb-4 text-center">План тренировок</h2>
-      <table class="w-full text-sm text-left text-gray-300 mb-6">
-        <thead class="text-xs uppercase bg-gray-800 text-gray-400">
-          <tr>
-            <th class="px-4 py-2">Упражнение</th>
-            <th class="px-4 py-2">Подходы</th>
-            <th class="px-4 py-2">Повт.</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="bg-gray-900">
-            <td class="px-4 py-2">Приседания</td>
-            <td class="px-4 py-2">4</td>
-            <td class="px-4 py-2">10</td>
-          </tr>
-          <tr class="bg-gray-800">
-            <td class="px-4 py-2">Жим лёжа</td>
-            <td class="px-4 py-2">3</td>
-            <td class="px-4 py-2">8</td>
-          </tr>
-        </tbody>
+    <div class="progress"><div class="progress-fill" style="width: 80%;"></div></div>
+    <p>Сила</p>
+    <div class="progress"><div class="progress-fill" style="width: 70%;"></div></div>
+    <p>Скорость</p>
+    <div class="progress"><div class="progress-fill" style="width: 65%;"></div></div>
+    <p>Выносливость</p>
+
+    <div id="dashboard-tab" class="tab active">
+      <p style="margin-top: 20px;">Добро пожаловать!</p>
+    </div>
+
+    <div id="workout-tab" class="tab">
+      <h2>План тренировок</h2>
+      <table>
+        <tr><th>Упражнение</th><th>Подходы</th><th>Повт.</th></tr>
+        <tr><td>Приседания</td><td>4</td><td>10</td></tr>
+        <tr><td>Жим лёжа</td><td>3</td><td>8</td></tr>
       </table>
     </div>
 
-    <div id="nutrition" class="hidden text-left w-full max-w-md mt-6">
-      <h2 class="text-2xl font-semibold mb-4 text-center">План питания</h2>
-      <table class="w-full text-sm text-left text-gray-300 mb-6">
-        <thead class="text-xs uppercase bg-gray-800 text-gray-400">
-          <tr>
-            <th class="px-4 py-2">Время</th>
-            <th class="px-4 py-2">Приём пищи</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="bg-gray-900">
-            <td class="px-4 py-2">08:00</td>
-            <td class="px-4 py-2">Овсянка, яйца</td>
-          </tr>
-          <tr class="bg-gray-800">
-            <td class="px-4 py-2">13:00</td>
-            <td class="px-4 py-2">Курица, рис, овощи</td>
-          </tr>
-        </tbody>
+    <div id="nutrition-tab" class="tab">
+      <h2>План питания</h2>
+      <table>
+        <tr><th>Время</th><th>Приём пищи</th></tr>
+        <tr><td>08:00</td><td>Овсянка, яйца</td></tr>
+        <tr><td>13:00</td><td>Курица, рис, овощи</td></tr>
       </table>
     </div>
 
-    <div id="feedback" class="hidden text-center mt-6">
-      <h2 class="text-2xl font-semibold mb-4">Обратная связь</h2>
-      <p class="text-gray-400 mb-2">Готовые программы, Telegram-бот и контакты</p>
-      <a href="https://t.me/your_bot" class="text-blue-400 underline">Telegram</a>
+    <div id="feedback-tab" class="tab">
+      <h2>Обратная связь</h2>
+      <p>Готовые программы, Telegram-бот и контакты:</p>
+      <a href="https://t.me/your_bot" style="color: cyan;">@your_bot</a>
     </div>
-  </main>
+  </div>
 
-  <!-- Навигация -->
-  <footer class="bg-gray-900 text-white py-3 flex justify-around text-sm border-t border-gray-800">
-    <button onclick="showTab('dashboard')">Главная</button>
-    <button onclick="showTab('workout')">Тренировки</button>
-    <button onclick="showTab('nutrition')">Питание</button>
-    <button onclick="showTab('feedback')">Связь</button>
-  </footer>
+  <nav id="bottom-nav" class="hidden">
+    <button onclick="switchTab('dashboard')" class="active">Главная</button>
+    <button onclick="switchTab('workout')">Тренировки</button>
+    <button onclick="switchTab('nutrition')">Питание</button>
+    <button onclick="switchTab('feedback')">Связь</button>
+  </nav>
 
   <script>
-    c
+    const validIds = ["123", "abc", "test"];
+
+    function checkId() {
+      const userId = document.getElementById("user-id").value.trim();
+      const loader = document.getElementById("loader");
+
+      if (validIds.includes(userId)) {
+        loader.classList.remove("hidden");
+        setTimeout(() => {
+          document.getElementById("auth-screen").classList.add("hidden");
+          document.getElementById("main-screen").classList.remove("hidden");
+          document.getElementById("bottom-nav").classList.remove("hidden");
+          document.getElementById("id-display").textContent = userId;
+        }, 1200);
+      } else {
+        alert("Неверный ID");
+      }
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll(".tab").forEach(el => el.classList.remove("active"));
+      document.getElementById(`${tab}-tab`).classList.add("active");
+
+      document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+    }
+  </script>
+</body>
+</html>
