@@ -16,6 +16,7 @@
       justify-content: flex-start;
       min-height: 100vh;
       padding: 20px;
+      overflow-x: hidden;
     }
     .center {
       width: 100%;
@@ -62,12 +63,12 @@
     .profile-info {
       margin-bottom: 20px;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start; /* левый старт */
       align-items: center;
       width: 100%;
       max-width: 520px;
       box-sizing: border-box;
-      gap: 8px;
+      gap: 12px;
     }
     .profile-info > div {
       background: #444;
@@ -77,29 +78,25 @@
       font-weight: 600;
       color: #eee;
       white-space: nowrap;
-      min-width: 33%;
       box-sizing: border-box;
+      user-select: none;
+      /* ширина под размер содержимого */
+      display: inline-block;
+      max-width: 45vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .name { text-align: left; }
     .number { text-align: center; }
     .gender { text-align: right; }
 
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      gap: 15px;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-    }
-
     .info-block {
       background: #111;
       padding: 12px 16px;
       border-radius: 12px;
-      flex: 1 1 220px;
-      min-width: 220px;
+      width: 100%;
       box-sizing: border-box;
+      margin-bottom: 20px;
     }
 
     table {
@@ -217,6 +214,66 @@
       font-size: 1rem;
       margin-bottom: 8px;
     }
+
+    /* Заголовок Морфометрия вынесенный */
+    #morphometry-title {
+      color: #ffd700;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: 6px;
+      text-align: center;
+      transition: color 0.2s ease;
+      max-width: 520px;
+      width: 100%;
+    }
+    #morphometry-title:hover {
+      color: #fff;
+    }
+
+    /* Размытие фона при открытом модальном окне */
+    .blurred {
+      filter: blur(6px);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Модальное окно */
+    #modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #111;
+      border-radius: 16px;
+      padding: 20px 30px;
+      max-width: 90vw;
+      width: 400px;
+      color: #eee;
+      box-shadow: 0 0 20px #ffd700aa;
+      z-index: 9999;
+      display: none;
+      user-select: text;
+    }
+    #modal p {
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+    #modal button {
+      background: #ffd700;
+      color: #111;
+      font-weight: 700;
+      border-radius: 10px;
+      padding: 8px 16px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+    }
+    #modal button:hover {
+      background: #ffc400;
+    }
   </style>
 </head>
 <body>
@@ -232,28 +289,34 @@
     <h2>Личный кабинет</h2>
     <div class="avatar"></div>
     <div class="profile-info">
-      <div class="name">Саша</div>
-      <div class="number">Звено #8712</div>
-      <div class="gender">Женщина</div>
+      <div class="name">Александр</div>
+      <div class="number">№1234567</div>
+      <div class="gender">Мужской</div>
     </div>
 
-    <div class="info-row">
-      <div class="info-block">
-        <table>
-          <tr><th>Рост</th><td>170 см</td></tr>
-          <tr><th>Вес</th><td>50 кг</td></tr>
-          <tr><th>Возраст</th><td>19 лет</td></tr>
-          <tr><th>Стаж</th><td>5 лет</td></tr>
-        </table>
-      </div>
-      <div class="info-block">
-        <table>
-          <tr><th>Индекс обезьяны</th><td>1.2</td></tr>
-          <tr><th>Индекс ленивца</th><td>1.1</td></tr>
-          <tr><th>Индекс жабы</th><td>1.3</td></tr>
-          <tr><th>Индекс паука</th><td>1.4</td></tr>
-        </table>
-      </div>
+    <!-- Таблица с ростом, весом, возрастом, стажем -->
+    <div class="info-block">
+      <table>
+        <tr><th>Рост</th><td>180 см</td></tr>
+        <tr><th>Вес</th><td>75 кг</td></tr>
+        <tr><th>Возраст</th><td>29 лет</td></tr>
+        <tr><th>Стаж</th><td>5 лет</td></tr>
+      </table>
+    </div>
+
+    <!-- Заголовок Морфометрия -->
+    <div id="morphometry-title" tabindex="0" role="button" aria-pressed="false" aria-label="Открыть описание морфометрии">
+      Морфометрия
+    </div>
+
+    <!-- Таблица индексов -->
+    <div class="info-block">
+      <table>
+        <tr><th>Индекс обезьяны</th><td>1.2</td></tr>
+        <tr><th>Индекс ленивца</th><td>1.1</td></tr>
+        <tr><th>Индекс жабы</th><td>1.3</td></tr>
+        <tr><th>Индекс паука</th><td>1.4</td></tr>
+      </table>
     </div>
 
     <div class="bars-container">
@@ -269,8 +332,17 @@
     </div>
   </div>
 
+  <!-- Модальное окно -->
+  <div id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
+    <h3 id="modal-title">Что такое Морфометрия?</h3>
+    <p id="modal-desc">
+      Морфометрия — это научное направление, которое занимается измерением и анализом формы и размеров живых организмов. В фитнесе и медицине она используется для оценки физических параметров и пропорций тела, что помогает составлять индивидуальные программы тренировок и контроля здоровья.
+    </p>
+    <button id="close-modal">Назад</button>
+  </div>
+
   <script>
-    const validIds = ["XFGA-7642", "abc", "test"];
+    const validIds = ["123", "abc", "test"];
 
     function checkId() {
       const userId = document.getElementById("user-id").value.trim();
@@ -279,12 +351,10 @@
       error.style.display = "none";
 
       if (validIds.includes(userId)) {
-        // Показать лоадбар и спрятать ошибку
         loader.style.display = "block";
         document.querySelector("#loader > div").style.width = "0%";
         document.querySelector("#loader > div").style.animation = "loadingBar 2s linear forwards";
 
-        // Через 2 секунды скрыть форму и показать основной экран
         setTimeout(() => {
           document.getElementById("auth-screen").style.display = "none";
           document.getElementById("main-screen").classList.remove("hidden");
@@ -317,6 +387,39 @@
         container.appendChild(segment);
       }
     }
+
+    // Морфометрия - открытие/закрытие модального окна
+    const morphTitle = document.getElementById("morphometry-title");
+    const modal = document.getElementById("modal");
+    const mainScreen = document.getElementById("main-screen");
+
+    function openModal() {
+      modal.style.display = "block";
+      mainScreen.classList.add("blurred");
+      document.body.style.overflow = "hidden";
+      morphTitle.setAttribute("aria-pressed", "true");
+    }
+    function closeModal() {
+      modal.style.display = "none";
+      mainScreen.classList.remove("blurred");
+      document.body.style.overflow = "auto";
+      morphTitle.setAttribute("aria-pressed", "false");
+      morphTitle.focus();
+    }
+
+    morphTitle.addEventListener("click", openModal);
+    morphTitle.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openModal();
+      }
+    });
+    document.getElementById("close-modal").addEventListener("click", closeModal);
+    window.addEventListener("keydown", e => {
+      if (e.key === "Escape" && modal.style.display === "block") {
+        closeModal();
+      }
+    });
   </script>
 </body>
 </html>
