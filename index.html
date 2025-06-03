@@ -16,7 +16,6 @@
       justify-content: flex-start;
       min-height: 100vh;
       padding: 20px;
-      overflow-x: hidden;
     }
     .center {
       width: 100%;
@@ -25,9 +24,31 @@
       flex-direction: column;
       align-items: center;
     }
+
+    #auth-screen {
+      width: 30vw;
+      max-width: 320px;
+      min-width: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    #auth-screen h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      color: #eee;
+    }
+
     input, button {
       padding: 8px;
       margin-top: 10px;
+      width: 100%;
       border: none;
       border-radius: 5px;
       font-size: 0.9rem;
@@ -35,20 +56,14 @@
     input {
       background: #222;
       color: white;
-      width: 100%;
-      box-sizing: border-box;
     }
     button {
       background: white;
       color: black;
       cursor: pointer;
       font-weight: bold;
-      width: 100%;
-      box-sizing: border-box;
     }
-    .hidden { 
-      display: none !important; 
-    }
+    .hidden { display: none; }
 
     .avatar {
       width: 120px;
@@ -60,35 +75,19 @@
       flex-shrink: 0;
     }
 
-    .profile-info {
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: flex-start; /* левый старт */
-      align-items: center;
-      width: 100%;
-      max-width: 520px;
-      box-sizing: border-box;
-      gap: 12px;
-    }
-    .profile-info > div {
+    #profile-number {
       background: #444;
-      padding: 6px 10px;
+      padding: 8px 16px;
       border-radius: 12px;
-      font-size: 0.8rem;
-      font-weight: 600;
       color: #eee;
-      white-space: nowrap;
-      box-sizing: border-box;
+      font-weight: 600;
+      font-size: 0.9rem;
       user-select: none;
-      /* ширина под размер содержимого */
-      display: inline-block;
-      max-width: 45vw;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      display: inline-block; /* Чтобы ширина по содержимому */
+      margin-bottom: 20px;
+      text-align: center;
+      min-width: 60px;
     }
-    .name { text-align: left; }
-    .number { text-align: center; }
-    .gender { text-align: right; }
 
     .info-block {
       background: #111;
@@ -105,11 +104,13 @@
       color: #eee;
       font-weight: 500;
       font-size: 0.75rem;
-      line-height: 1.1;
+      line-height: 1.2;
     }
     th, td {
       padding: 4px 2px;
       font-weight: 500;
+      font-size: 0.75rem;
+      line-height: 1.2;
     }
     th {
       color: #ccc;
@@ -118,6 +119,18 @@
     }
     td {
       text-align: right;
+    }
+
+    #morpho-title {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #ddd;
+      margin-bottom: 6px;
+      cursor: pointer;
+      user-select: none;
+      max-width: 520px;
+      width: 100%;
+      text-align: center; /* По центру */
     }
 
     .bars-container {
@@ -130,6 +143,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+      max-width: 520px;
     }
 
     .bar-row {
@@ -137,6 +151,7 @@
       flex-direction: column;
       align-items: center;
       gap: 4px;
+      width: 100%;
     }
 
     .bar-label {
@@ -145,6 +160,8 @@
       user-select: none;
       font-size: 0.7rem;
       text-align: center;
+      width: 100%;
+      cursor: pointer;
     }
 
     .bar {
@@ -153,7 +170,7 @@
       height: 6px;
       border-radius: 6px;
       width: 100%;
-      max-width: 460px;
+      max-width: 480px;
     }
 
     .segment {
@@ -172,108 +189,72 @@
       color: #f66;
       font-size: 0.8rem;
       margin-top: 6px;
-      padding: 6px 10px;
-      border: 1px solid #f66;
-      border-radius: 6px;
       display: none;
-      box-sizing: border-box;
-      width: 100%;
-      max-width: 520px;
-      text-align: center;
-      user-select: none;
-    }
-
-    #loader {
-      width: 100%;
-      max-width: 520px;
-      height: 5px;
-      background: #222;
+      border: 1.5px solid #f66;
+      padding: 5px 8px;
       border-radius: 5px;
-      overflow: hidden;
-      margin-top: 12px;
-      display: none;
+      user-select: none;
     }
-    #loader > div {
-      height: 100%;
-      background: #ffd700;
+
+    /* Старый стиль лоадера (ширина 100%, жёлтая линия сверху) */
+    #loader-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: #FFD700;
       width: 0%;
-      animation: loadingBar 2s linear forwards;
-    }
-    @keyframes loadingBar {
-      from { width: 0%; }
-      to { width: 100%; }
+      transition: width 1.5s linear;
+      z-index: 2000;
     }
 
-    #auth-screen {
-      width: 30vw;
-      min-width: 220px;
-      max-width: 320px;
-      text-align: center;
-    }
-    #auth-screen h3 {
-      font-size: 1rem;
-      margin-bottom: 8px;
+    /* Фон блюра */
+    #blur-background {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
     }
 
-    /* Заголовок Морфометрия вынесенный */
-    #morphometry-title {
-      color: #ffd700;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      user-select: none;
-      margin-bottom: 6px;
-      text-align: center;
-      transition: color 0.2s ease;
-      max-width: 520px;
-      width: 100%;
-    }
-    #morphometry-title:hover {
-      color: #fff;
-    }
-
-    /* Размытие фона при открытом модальном окне */
-    .blurred {
-      filter: blur(6px);
-      user-select: none;
-      pointer-events: none;
-    }
-
-    /* Модальное окно */
-    #modal {
+    #info-popup {
       position: fixed;
       top: 50%;
       left: 50%;
+      max-width: 280px;
+      width: 80vw;
       transform: translate(-50%, -50%);
-      background: #111;
-      border-radius: 16px;
-      padding: 20px 30px;
-      max-width: 90vw;
-      width: 400px;
-      color: #eee;
-      box-shadow: 0 0 20px #ffd700aa;
-      z-index: 9999;
+      background: #222;
+      border-radius: 14px;
+      padding: 16px 22px;
+      color: #ddd;
+      font-size: 0.85rem;
+      z-index: 1001;
+      box-shadow: 0 0 15px #000a;
+      user-select: none;
+    }
+
+    #info-popup.hidden {
       display: none;
-      user-select: text;
     }
-    #modal p {
-      margin-bottom: 20px;
-      line-height: 1.3;
+
+    #blur-background.hidden {
+      display: none;
     }
-    #modal button {
-      background: #ffd700;
-      color: #111;
-      font-weight: 700;
-      border-radius: 10px;
-      padding: 8px 16px;
+
+    #info-popup button {
+      background: #444;
       border: none;
+      color: #ddd;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 10px;
       cursor: pointer;
       width: 100%;
-      font-size: 1rem;
+      font-size: 0.9rem;
+      margin-top: 10px;
     }
-    #modal button:hover {
-      background: #ffc400;
-    }
+
   </style>
 </head>
 <body>
@@ -282,144 +263,145 @@
     <input id="user-id" type="text" placeholder="Ваш ID" autocomplete="off" />
     <button onclick="checkId()">Войти</button>
     <div id="error-msg">Неверный ID</div>
-    <div id="loader"><div></div></div>
   </div>
 
-  <div id="main-screen" class="hidden center" style="margin-top: 30px;">
-    <h2>Личный кабинет</h2>
+  <div id="main-screen" class="hidden center">
     <div class="avatar"></div>
-    <div class="profile-info">
-      <div class="name">Александр</div>
-      <div class="number">№1234567</div>
-      <div class="gender">Мужской</div>
-    </div>
+    <div id="profile-number">№1234567</div>
 
-    <!-- Таблица с ростом, весом, возрастом, стажем -->
     <div class="info-block">
       <table>
-        <tr><th>Рост</th><td>180 см</td></tr>
-        <tr><th>Вес</th><td>75 кг</td></tr>
-        <tr><th>Возраст</th><td>29 лет</td></tr>
-        <tr><th>Стаж</th><td>5 лет</td></tr>
+        <tbody>
+          <tr><th>Рост</th><td>180 см</td></tr>
+          <tr><th>Вес</th><td>75 кг</td></tr>
+          <tr><th>Возраст</th><td>29 лет</td></tr>
+          <tr><th>Стаж</th><td>5 лет</td></tr>
+        </tbody>
       </table>
     </div>
 
-    <!-- Заголовок Морфометрия -->
-    <div id="morphometry-title" tabindex="0" role="button" aria-pressed="false" aria-label="Открыть описание морфометрии">
-      Морфометрия
-    </div>
-
-    <!-- Таблица индексов -->
+    <div id="morpho-title" onclick="openMorphoInfo()">Морфометрия</div>
     <div class="info-block">
       <table>
-        <tr><th>Индекс обезьяны</th><td>1.2</td></tr>
-        <tr><th>Индекс ленивца</th><td>1.1</td></tr>
-        <tr><th>Индекс жабы</th><td>1.3</td></tr>
-        <tr><th>Индекс паука</th><td>1.4</td></tr>
+        <tbody>
+          <tr><th>Индекс обезьяны</th><td>1.2</td></tr>
+          <tr><th>Индекс ленивца</th><td>1.1</td></tr>
+          <tr><th>Индекс жабы</th><td>1.3</td></tr>
+          <tr><th>Индекс паука</th><td>1.4</td></tr>
+        </tbody>
       </table>
     </div>
 
     <div class="bars-container">
-      <div class="bar-row"><div class="bar-label">Максимальная сила</div><div class="bar" id="bar-strength"></div></div>
-      <div class="bar-row"><div class="bar-label">Максимальная скорость</div><div class="bar" id="bar-speed"></div></div>
-      <div class="bar-row"><div class="bar-label">Энергия / Выносливость</div><div class="bar" id="bar-endurance"></div></div>
-      <div class="bar-row"><div class="bar-label">Эластичность</div><div class="bar" id="bar-flexibility"></div></div>
-      <div class="bar-row"><div class="bar-label">Мобильность</div><div class="bar" id="bar-mobility"></div></div>
-      <div class="bar-row"><div class="bar-label">Метаболическая гибкость</div><div class="bar" id="bar-metabolic"></div></div>
-      <div class="bar-row"><div class="bar-label">Взрывная сила</div><div class="bar" id="bar-explosive"></div></div>
-      <div class="bar-row"><div class="bar-label">Координация и баланс</div><div class="bar" id="bar-coordination"></div></div>
-      <div class="bar-row"><div class="bar-label">Работа в паре</div><div class="bar" id="bar-partner"></div></div>
+      <div class="bar-row"><div class="bar-label" onclick="openBarInfo('Максимальная сила — это максимальная мощность мышц')">Максимальная сила</div><div class="bar" id="bar-strength"></div></div>
+      <div class="bar-row"><div class="bar-label" onclick="openBarInfo('Максимальная скорость — максимальная быстрота передвижения')">Максимальная скорость</div><div class="bar" id="bar-speed"></div></div>
+      <div class="bar-row"><div class="bar-label" onclick="openBarInfo('Энергия и выносливость — способность долго работать')">Энергия / Выносливость</div><div class="bar" id="bar-endurance"></div></div>
+      <div class="bar-row"><div class="bar-label" onclick="openBarInfo('Эластичность — гибкость и упругость тканей')">Эластичность</div><div class="bar" id="bar-flexibility"></div></div>
+      <div class="bar-row"><div class="bar-label" onclick="openBarInfo('Мобильность — подвижность суставов')">Мобильность</div><div class="bar" id="bar-mobility"></div></div>
+      <div class="bar-row"><div class="bar-label" onclick="openBarInfo('Метаболическая гибкость — адаптация обмена веществ')">Метаболическая гибкость</div><div class="bar" id="bar-metabolic"></div></div>
+      <div class="bar-row"><div class="bar-label" onclick="openBarInfo('Взрывная сила — способность к резкому усилию')">Взрывная сила</div><div class="bar" id="bar-explosive"></div></div>
+      <div class="bar-row"><div class="bar-label" onclick="openBarInfo('Координация и баланс — контроль движений')">Координация и баланс</div><div class="bar" id="bar-coordination"></div></div>
+      <div class="bar-row"><div class="bar-label" onclick="openBarInfo('Работа в паре — взаимодействие с партнёром')">Работа в паре</div><div class="bar" id="bar-pairwork"></div></div>
     </div>
   </div>
 
-  <!-- Модальное окно -->
-  <div id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
-    <h3 id="modal-title">Что такое Морфометрия?</h3>
-    <p id="modal-desc">
-      Морфометрия — это научное направление, которое занимается измерением и анализом формы и размеров живых организмов. В фитнесе и медицине она используется для оценки физических параметров и пропорций тела, что помогает составлять индивидуальные программы тренировок и контроля здоровья.
-    </p>
-    <button id="close-modal">Назад</button>
+  <div id="loader-bar" class="hidden"></div>
+
+  <!-- Всплывающее окно -->
+  <div id="info-popup" class="hidden">
+    <div id="popup-content"></div>
+    <button onclick="closePopup()">Назад</button>
   </div>
+  <div id="blur-background" class="hidden"></div>
 
   <script>
-    const validIds = ["123", "abc", "test"];
+    const validIds = ['123', '456', '789']; // Пример валидных ID
 
     function checkId() {
-      const userId = document.getElementById("user-id").value.trim();
-      const error = document.getElementById("error-msg");
-      const loader = document.getElementById("loader");
-      error.style.display = "none";
+      const input = document.getElementById('user-id');
+      const val = input.value.trim();
+      const errorMsg = document.getElementById('error-msg');
+      if (!validIds.includes(val)) {
+        errorMsg.style.display = 'block';
+        return;
+      }
+      errorMsg.style.display = 'none';
+      showLoader().then(() => {
+        document.getElementById('auth-screen').style.display = 'none';
+        document.getElementById('main-screen').classList.remove('hidden');
+        fillData(val);
+      });
+    }
 
-      if (validIds.includes(userId)) {
-        loader.style.display = "block";
-        document.querySelector("#loader > div").style.width = "0%";
-        document.querySelector("#loader > div").style.animation = "loadingBar 2s linear forwards";
-
+    function showLoader() {
+      return new Promise((resolve) => {
+        const loader = document.getElementById('loader-bar');
+        loader.style.width = '0%';
+        loader.classList.remove('hidden');
         setTimeout(() => {
-          document.getElementById("auth-screen").style.display = "none";
-          document.getElementById("main-screen").classList.remove("hidden");
-          renderBars();
-        }, 2000);
-      } else {
-        error.style.display = "block";
+          loader.style.width = '100%';
+        }, 20);
+        setTimeout(() => {
+          loader.classList.add('hidden');
+          resolve();
+        }, 1600);
+      });
+    }
+
+    function fillData(id) {
+      // Пример заполнения номера
+      document.getElementById('profile-number').textContent = `№${id}`;
+
+      // Заполняем прогрессбары случайными значениями
+      const bars = {
+        'bar-strength': 7,
+        'bar-speed': 8,
+        'bar-endurance': 6,
+        'bar-flexibility': 5,
+        'bar-mobility': 7,
+        'bar-metabolic': 6,
+        'bar-explosive': 7,
+        'bar-coordination': 8,
+        'bar-pairwork': 6
+      };
+      for (const [id, val] of Object.entries(bars)) {
+        fillBar(id, val);
       }
     }
 
-    function renderBars() {
-      renderBar("bar-strength", 7);
-      renderBar("bar-speed", 6);
-      renderBar("bar-endurance", 8);
-      renderBar("bar-flexibility", 5);
-      renderBar("bar-mobility", 6);
-      renderBar("bar-metabolic", 4);
-      renderBar("bar-explosive", 7);
-      renderBar("bar-coordination", 6);
-      renderBar("bar-partner", 5);
-    }
-
-    function renderBar(id, filledCount) {
-      const container = document.getElementById(id);
-      container.innerHTML = "";
+    function fillBar(barId, val) {
+      const bar = document.getElementById(barId);
+      if (!bar) return;
+      bar.innerHTML = '';
       for (let i = 0; i < 10; i++) {
-        const segment = document.createElement("div");
-        segment.classList.add("segment");
-        if (i < filledCount) segment.classList.add("filled");
-        container.appendChild(segment);
+        const seg = document.createElement('div');
+        seg.className = 'segment' + (i < val ? ' filled' : '');
+        bar.appendChild(seg);
       }
     }
 
-    // Морфометрия - открытие/закрытие модального окна
-    const morphTitle = document.getElementById("morphometry-title");
-    const modal = document.getElementById("modal");
-    const mainScreen = document.getElementById("main-screen");
-
-    function openModal() {
-      modal.style.display = "block";
-      mainScreen.classList.add("blurred");
-      document.body.style.overflow = "hidden";
-      morphTitle.setAttribute("aria-pressed", "true");
-    }
-    function closeModal() {
-      modal.style.display = "none";
-      mainScreen.classList.remove("blurred");
-      document.body.style.overflow = "auto";
-      morphTitle.setAttribute("aria-pressed", "false");
-      morphTitle.focus();
+    function openMorphoInfo() {
+      const popup = document.getElementById('info-popup');
+      const blur = document.getElementById('blur-background');
+      const content = document.getElementById('popup-content');
+      content.textContent = `Морфометрия — это наука, изучающая измерения и пропорции тела человека. Она помогает анализировать физические характеристики и состояние здоровья.`;
+      popup.classList.remove('hidden');
+      blur.classList.remove('hidden');
     }
 
-    morphTitle.addEventListener("click", openModal);
-    morphTitle.addEventListener("keydown", e => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        openModal();
-      }
-    });
-    document.getElementById("close-modal").addEventListener("click", closeModal);
-    window.addEventListener("keydown", e => {
-      if (e.key === "Escape" && modal.style.display === "block") {
-        closeModal();
-      }
-    });
+    function openBarInfo(text) {
+      const popup = document.getElementById('info-popup');
+      const blur = document.getElementById('blur-background');
+      const content = document.getElementById('popup-content');
+      content.textContent = text;
+      popup.classList.remove('hidden');
+      blur.classList.remove('hidden');
+    }
+
+    function closePopup() {
+      document.getElementById('info-popup').classList.add('hidden');
+      document.getElementById('blur-background').classList.add('hidden');
+    }
   </script>
 </body>
 </html>
