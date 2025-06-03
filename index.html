@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Фитнес Дашборд</title>
   <style>
     body {
@@ -12,109 +12,159 @@
       font-family: sans-serif;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
-    }
-
-    .center {
-      display: flex;
-      flex: 1;
       align-items: center;
-      justify-content: center;
-      flex-direction: column;
+      justify-content: flex-start;
+      min-height: 100vh;
       padding: 20px;
     }
-
+    .center {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
     input, button {
       padding: 10px;
       margin-top: 10px;
       width: 100%;
-      max-width: 300px;
       border: none;
       border-radius: 5px;
+      font-size: 1rem;
     }
-
     input {
       background: #222;
       color: white;
     }
-
     button {
       background: white;
       color: black;
       cursor: pointer;
+      font-weight: bold;
     }
-
     .hidden { display: none; }
-    .loading {
-      border: 4px solid #333;
-      border-top: 4px solid #fff;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin-top: 20px;
+
+    /* Аватар */
+    .avatar {
+      width: 120px;
+      height: 160px;
+      background: #888;
+      border: 2px solid #aaa;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      flex-shrink: 0;
     }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    /* Блок под аватаром с именем и тд */
+    .profile-info {
+      margin-bottom: 30px;
+      background: #444;
+      padding: 8px 20px;
+      border-radius: 20px / 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      user-select: none;
+      transform: skew(-15deg);
+      color: #eee;
+      white-space: nowrap;
+    }
+    /* Внутренний текст компенсируем трансформацию */
+    .profile-info span {
+      display: inline-block;
+      transform: skew(15deg);
     }
 
-    .progress {
-      width: 80%;
-      max-width: 300px;
-      background: #333;
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 8px 0;
-    }
-
-    .progress-fill {
-      height: 10px;
-      background: limegreen;
-    }
-
-    nav {
+    /* Строка с двумя таблицами */
+    .info-row {
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
+      width: 100%;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .info-block {
       background: #111;
-      padding: 10px 0;
-      border-top: 1px solid #333;
+      padding: 15px 20px;
+      border-radius: 12px;
+      flex: 1 1 220px;
+      min-width: 220px;
+      box-sizing: border-box;
     }
 
-    nav button {
-      background: none;
-      color: #aaa;
-      font-size: 14px;
-      border: none;
+    /* Таблица с левым выравниванием текста и значений */
+    .info-block.left-align table th,
+    .info-block.left-align table td {
+      text-align: left;
+      padding: 8px 6px;
+      font-weight: 500;
     }
-
-    nav button.active {
-      color: white;
+    .info-block.left-align table th {
+      width: 130px;
+      color: #ccc;
     }
-
-    .tab {
-      display: none;
-    }
-
-    .tab.active {
-      display: block;
+    .info-block.left-align table td {
+      color: #eee;
     }
 
     table {
       width: 100%;
-      max-width: 400px;
       border-collapse: collapse;
-      margin-top: 20px;
     }
-
     th, td {
-      padding: 8px;
-      border-bottom: 1px solid #333;
+      padding: 6px 8px;
+      text-align: left;
     }
 
-    th {
-      background: #111;
+    /* Прогрессбары - общий блок */
+    .bars-container {
+      width: 100%;
+      background: #222;
+      padding: 20px 25px;
+      border-radius: 16px;
+      box-sizing: border-box;
+      margin-bottom: 40px;
+    }
+
+    .bar-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px 40px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bar-label {
+      width: 160px;
+      flex-shrink: 0;
+      font-weight: 600;
+      color: #ddd;
+      user-select: none;
+    }
+
+    .bar {
+      display: flex;
+      flex: 1;
+      gap: 3px;
+    }
+
+    .segment {
+      flex: 1;
+      height: 14px;
+      border-radius: 3px;
+      background: #fff;
+      opacity: 0.3;
+      transition: background-color 0.3s ease;
+    }
+    .segment.filled {
+      background: #FFD700; /* жёлтый */
+      opacity: 1;
     }
   </style>
 </head>
@@ -122,92 +172,115 @@
 
   <div id="auth-screen" class="center">
     <h2>Введите персональный ID</h2>
-    <input id="user-id" type="text" placeholder="Ваш ID"/>
+    <input id="user-id" type="text" placeholder="Ваш ID" autocomplete="off" />
     <button onclick="checkId()">Войти</button>
-    <div id="loader" class="loading hidden"></div>
   </div>
 
-  <div id="main-screen" class="hidden center" style="padding-bottom: 80px;">
-    <h1>Личный кабинет</h1>
-    <p>Ваш ID: <span id="id-display"></span></p>
-    <img src="https://i.imgur.com/gj4n4JN.gif" alt="3D Body" width="150" />
-
-    <div style="margin-top: 20px; text-align: left;">
-      <p>Рост: 180 см</p>
-      <p>Вес: 75 кг</p>
-      <p>Тип: Обезьяна 🐒</p>
+  <div id="main-screen" class="hidden center">
+    <h2>Личный кабинет</h2>
+    <div class="avatar"></div>
+    <div class="profile-info">
+      <span>Иван Иванов • №123 • Мужской</span>
     </div>
 
-    <div class="progress"><div class="progress-fill" style="width: 80%;"></div></div>
-    <p>Сила</p>
-    <div class="progress"><div class="progress-fill" style="width: 70%;"></div></div>
-    <p>Скорость</p>
-    <div class="progress"><div class="progress-fill" style="width: 65%;"></div></div>
-    <p>Выносливость</p>
-
-    <div id="dashboard-tab" class="tab active">
-      <p style="margin-top: 20px;">Добро пожаловать!</p>
+    <div class="info-row">
+      <div class="info-block left-align">
+        <table>
+          <tr><th>Рост</th><td>180 см</td></tr>
+          <tr><th>Вес</th><td>75 кг</td></tr>
+          <tr><th>Возраст</th><td>29 лет</td></tr>
+          <tr><th>Стаж</th><td>5 лет</td></tr>
+        </table>
+      </div>
+      <div class="info-block">
+        <table>
+          <tr><th>Индекс обезьяны</th><td>1.2</td></tr>
+          <tr><th>Индекс ленивца</th><td>1.1</td></tr>
+          <tr><th>Индекс жабы</th><td>1.3</td></tr>
+          <tr><th>Индекс паука</th><td>1.4</td></tr>
+        </table>
+      </div>
     </div>
 
-    <div id="workout-tab" class="tab">
-      <h2>План тренировок</h2>
-      <table>
-        <tr><th>Упражнение</th><th>Подходы</th><th>Повт.</th></tr>
-        <tr><td>Приседания</td><td>4</td><td>10</td></tr>
-        <tr><td>Жим лёжа</td><td>3</td><td>8</td></tr>
-      </table>
-    </div>
-
-    <div id="nutrition-tab" class="tab">
-      <h2>План питания</h2>
-      <table>
-        <tr><th>Время</th><th>Приём пищи</th></tr>
-        <tr><td>08:00</td><td>Овсянка, яйца</td></tr>
-        <tr><td>13:00</td><td>Курица, рис, овощи</td></tr>
-      </table>
-    </div>
-
-    <div id="feedback-tab" class="tab">
-      <h2>Обратная связь</h2>
-      <p>Готовые программы, Telegram-бот и контакты:</p>
-      <a href="https://t.me/your_bot" style="color: cyan;">@your_bot</a>
+    <div class="bars-container">
+      <div class="bar-grid">
+        <div class="bar-row">
+          <div class="bar-label">Максимальная сила</div>
+          <div class="bar" id="bar-strength"></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Максимальная скорость</div>
+          <div class="bar" id="bar-speed"></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Энергия / Выносливость</div>
+          <div class="bar" id="bar-endurance"></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Эластичность</div>
+          <div class="bar" id="bar-flexibility"></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Мобильность</div>
+          <div class="bar" id="bar-mobility"></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Метаболическая гибкость</div>
+          <div class="bar" id="bar-metabolic"></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Взрывная сила</div>
+          <div class="bar" id="bar-explosive"></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Координация и баланс</div>
+          <div class="bar" id="bar-coordination"></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Работа в паре</div>
+          <div class="bar" id="bar-partner"></div>
+        </div>
+      </div>
     </div>
   </div>
-
-  <nav id="bottom-nav" class="hidden">
-    <button onclick="switchTab('dashboard')" class="active">Главная</button>
-    <button onclick="switchTab('workout')">Тренировки</button>
-    <button onclick="switchTab('nutrition')">Питание</button>
-    <button onclick="switchTab('feedback')">Связь</button>
-  </nav>
 
   <script>
     const validIds = ["123", "abc", "test"];
 
     function checkId() {
       const userId = document.getElementById("user-id").value.trim();
-      const loader = document.getElementById("loader");
-
       if (validIds.includes(userId)) {
-        loader.classList.remove("hidden");
-        setTimeout(() => {
-          document.getElementById("auth-screen").classList.add("hidden");
-          document.getElementById("main-screen").classList.remove("hidden");
-          document.getElementById("bottom-nav").classList.remove("hidden");
-          document.getElementById("id-display").textContent = userId;
-        }, 1200);
+        document.getElementById("auth-screen").classList.add("hidden");
+        document.getElementById("main-screen").classList.remove("hidden");
+        renderBars();
       } else {
         alert("Неверный ID");
       }
     }
 
-    function switchTab(tab) {
-      document.querySelectorAll(".tab").forEach(el => el.classList.remove("active"));
-      document.getElementById(`${tab}-tab`).classList.add("active");
+    function renderBars() {
+      renderBar("bar-strength", 7);
+      renderBar("bar-speed", 6);
+      renderBar("bar-endurance", 8);
+      renderBar("bar-flexibility", 5);
+      renderBar("bar-mobility", 6);
+      renderBar("bar-metabolic", 4);
+      renderBar("bar-explosive", 7);
+      renderBar("bar-coordination", 6);
+      renderBar("bar-partner", 5);
+    }
 
-      document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
-      event.target.classList.add("active");
+    function renderBar(id, filledCount) {
+      const container = document.getElementById(id);
+      container.innerHTML = "";
+      for (let i = 0; i < 10; i++) {
+        const segment = document.createElement("div");
+        segment.classList.add("segment");
+        if (i < filledCount) segment.classList.add("filled");
+        container.appendChild(segment);
+      }
     }
   </script>
+
 </body>
 </html>
