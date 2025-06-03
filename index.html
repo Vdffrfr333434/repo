@@ -126,37 +126,33 @@
       border-radius: 16px;
       box-sizing: border-box;
       margin-bottom: 40px;
-    }
-
-    .bar-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
     .bar-row {
       display: flex;
-      align-items: center;
-      gap: 12px;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .bar-label {
-      width: 160px;
-      flex-shrink: 0;
       font-weight: 600;
       color: #ddd;
       user-select: none;
+      font-size: 1rem;
     }
 
     .bar {
       display: flex;
-      flex: 1;
       gap: 3px;
+      height: 14px;
+      border-radius: 6px;
     }
 
     .segment {
       flex: 1;
-      height: 14px;
       border-radius: 3px;
       background: #fff;
       opacity: 0.3;
@@ -203,43 +199,41 @@
     </div>
 
     <div class="bars-container">
-      <div class="bar-grid">
-        <div class="bar-row">
-          <div class="bar-label">Максимальная сила</div>
-          <div class="bar" id="bar-strength"></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Максимальная скорость</div>
-          <div class="bar" id="bar-speed"></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Энергия / Выносливость</div>
-          <div class="bar" id="bar-endurance"></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Эластичность</div>
-          <div class="bar" id="bar-flexibility"></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Мобильность</div>
-          <div class="bar" id="bar-mobility"></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Метаболическая гибкость</div>
-          <div class="bar" id="bar-metabolic"></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Взрывная сила</div>
-          <div class="bar" id="bar-explosive"></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Координация и баланс</div>
-          <div class="bar" id="bar-coordination"></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Работа в паре</div>
-          <div class="bar" id="bar-partner"></div>
-        </div>
+      <div class="bar-row">
+        <div class="bar-label">Максимальная сила</div>
+        <div class="bar" id="bar-strength"></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Максимальная скорость</div>
+        <div class="bar" id="bar-speed"></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Энергия / Выносливость</div>
+        <div class="bar" id="bar-endurance"></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Эластичность</div>
+        <div class="bar" id="bar-flexibility"></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Мобильность</div>
+        <div class="bar" id="bar-mobility"></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Метаболическая гибкость</div>
+        <div class="bar" id="bar-metabolic"></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Взрывная сила</div>
+        <div class="bar" id="bar-explosive"></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Координация и баланс</div>
+        <div class="bar" id="bar-coordination"></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Работа в паре</div>
+        <div class="bar" id="bar-partner"></div>
       </div>
     </div>
   </div>
