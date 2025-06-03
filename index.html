@@ -93,24 +93,29 @@
       flex: 1 1 220px;
       min-width: 220px;
       box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      color: #eee;
-      font-weight: 500;
+    .info-row-table {
+      display: flex;
+      justify-content: space-between;
       font-size: 0.75rem;
-      line-height: 1.2;
-    }
-    th, td {
-      padding: 4px 2px;
-      text-align: left;
       font-weight: 500;
+      color: #eee;
+      padding: 2px 0;
     }
-    th {
-      color: #ccc;
-      width: 130px;
+
+    .label {
+      text-align: left;
+      flex-grow: 1;
+    }
+
+    .value {
+      text-align: right;
+      min-width: 50px;
+      flex-shrink: 0;
     }
 
     .bars-container {
@@ -138,6 +143,7 @@
       user-select: none;
       font-size: 0.75rem;
       text-align: center;
+      width: 100%;
     }
 
     .bar {
@@ -146,6 +152,7 @@
       height: 8px;
       border-radius: 6px;
       width: 100%;
+      max-width: 450px;
     }
 
     .segment {
@@ -166,24 +173,9 @@
       margin-top: 6px;
       display: none;
     }
-
-    #loader {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: #000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      color: #fff;
-      z-index: 1000;
-    }
   </style>
 </head>
 <body>
-  <div id="loader">Загрузка...</div>
-
   <div id="auth-screen" class="center">
     <h3 style="margin-bottom: 8px; font-size: 0.95rem;">Введите персональный ID</h3>
     <input id="user-id" type="text" placeholder="Ваш ID" autocomplete="off" />
@@ -202,20 +194,16 @@
 
     <div class="info-row">
       <div class="info-block">
-        <table>
-          <tr><th>Рост</th><td>180 см</td></tr>
-          <tr><th>Вес</th><td>75 кг</td></tr>
-          <tr><th>Возраст</th><td>29 лет</td></tr>
-          <tr><th>Стаж</th><td>5 лет</td></tr>
-        </table>
+        <div class="info-row-table"><div class="label">Рост</div><div class="value">180 см</div></div>
+        <div class="info-row-table"><div class="label">Вес</div><div class="value">75 кг</div></div>
+        <div class="info-row-table"><div class="label">Возраст</div><div class="value">29 лет</div></div>
+        <div class="info-row-table"><div class="label">Стаж</div><div class="value">5 лет</div></div>
       </div>
       <div class="info-block">
-        <table>
-          <tr><th>Индекс обезьяны</th><td>1.2</td></tr>
-          <tr><th>Индекс ленивца</th><td>1.1</td></tr>
-          <tr><th>Индекс жабы</th><td>1.3</td></tr>
-          <tr><th>Индекс паука</th><td>1.4</td></tr>
-        </table>
+        <div class="info-row-table"><div class="label">Индекс обезьяны</div><div class="value">1.2</div></div>
+        <div class="info-row-table"><div class="label">Индекс ленивца</div><div class="value">1.1</div></div>
+        <div class="info-row-table"><div class="label">Индекс жабы</div><div class="value">1.3</div></div>
+        <div class="info-row-table"><div class="label">Индекс паука</div><div class="value">1.4</div></div>
       </div>
     </div>
 
@@ -242,12 +230,8 @@
 
       if (validIds.includes(userId)) {
         document.getElementById("auth-screen").classList.add("hidden");
-        document.getElementById("loader").style.display = "flex";
-        setTimeout(() => {
-          document.getElementById("loader").style.display = "none";
-          document.getElementById("main-screen").classList.remove("hidden");
-          renderBars();
-        }, 2000 + Math.random() * 2000);
+        document.getElementById("main-screen").classList.remove("hidden");
+        renderBars();
       } else {
         error.style.display = "block";
       }
