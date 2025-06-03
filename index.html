@@ -1,166 +1,124 @@
-import { useState, useEffect } from "react";
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Фитнес Дашборд</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col justify-between font-sans">
 
-export default function FitnessDashboard() {
-  const [userId, setUserId] = useState("");
-  const [accessGranted, setAccessGranted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("dashboard");
+  <!-- Модальное окно -->
+  <div id="authModal" class="fixed inset-0 flex items-center justify-center bg-black z-50">
+    <div class="p-6 bg-gray-900 rounded-xl shadow-lg w-full max-w-sm text-center">
+      <h2 class="text-2xl font-semibold">Введите персональный ID</h2>
+      <input id="userIdInput" type="text" placeholder="Ваш ID"
+        class="mt-4 w-full p-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500" />
+      <button onclick="checkAccess()" class="mt-4 w-full bg-white text-black py-2 rounded-md hover:bg-gray-200">
+        Войти
+      </button>
+    </div>
+  </div>
 
-  const handleAccess = () => {
-    const validIds = ["123", "abc", "test"];
-    if (validIds.includes(userId.trim())) {
-      setIsLoading(true);
-      setTimeout(() => {
-        setAccessGranted(true);
-        setIsLoading(false);
-      }, 1500);
-    } else {
-      alert("Неверный ID");
-    }
-  };
+  <!-- Загрузка -->
+  <div id="loader" class="hidden fixed inset-0 flex items-center justify-center bg-black z-40">
+    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-white"></div>
+  </div>
 
-  if (!accessGranted) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black text-white z-50">
-        <div className="p-6 bg-gray-900 rounded-xl shadow-lg w-full max-w-sm text-center">
-          <h2 className="text-2xl font-semibold">Введите персональный ID</h2>
-          <input
-            type="text"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            className="mt-4 w-full p-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500"
-            placeholder="Ваш ID"
-          />
-          <button
-            onClick={handleAccess}
-            className="mt-4 w-full bg-white text-black py-2 rounded-md hover:bg-gray-200"
-          >
-            Войти
-          </button>
+  <!-- Контент -->
+  <main id="mainContent" class="hidden flex-grow flex flex-col items-center justify-center px-4 pt-6">
+    <div id="dashboard" class="text-center w-full max-w-md">
+      <h1 class="text-3xl font-bold mb-4">Личный кабинет</h1>
+      <p class="text-gray-400 mb-2" id="userInfo"></p>
+      <img src="3d_body.gif" alt="3D Body" class="w-40 h-auto mx-auto mb-4" />
+      <div class="text-sm space-y-1 mb-6">
+        <p>Рост: 180 см</p>
+        <p>Вес: 75 кг</p>
+        <p>Тип: Обезьяна 🐒</p>
+      </div>
+      <div class="w-full space-y-4 text-left">
+        <div>
+          <p>Сила</p>
+          <div class="w-full h-3 bg-gray-700 rounded-full">
+            <div class="h-full bg-green-500 rounded-full" style="width: 80%"></div>
+          </div>
+        </div>
+        <div>
+          <p>Скорость</p>
+          <div class="w-full h-3 bg-gray-700 rounded-full">
+            <div class="h-full bg-yellow-500 rounded-full" style="width: 70%"></div>
+          </div>
+        </div>
+        <div>
+          <p>Выносливость</p>
+          <div class="w-full h-3 bg-gray-700 rounded-full">
+            <div class="h-full bg-blue-500 rounded-full" style="width: 65%"></div>
+          </div>
         </div>
       </div>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black text-white z-50">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-white"></div>
-      </div>
-    );
-  }
-
-  const ProgressBar = ({ label, value }) => (
-    <div className="mb-4">
-      <p className="text-sm mb-1">{label}</p>
-      <div className="w-64 h-3 bg-gray-700 rounded-full">
-        <div
-          className="h-full bg-green-500 rounded-full"
-          style={{ width: `${value}%` }}
-        ></div>
-      </div>
     </div>
-  );
 
-  return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
-      <div className="flex-grow flex items-center justify-center px-4">
-        {activeTab === "dashboard" && (
-          <div className="text-center">
-            <h1 className="text-3xl font-bold mb-4">Личный кабинет</h1>
-            <p className="text-gray-400 mb-4">Ваш ID: {userId}</p>
-            <img src="/3d_body.gif" alt="3D Body" className="w-48 h-auto mx-auto mb-4" />
-            <div className="text-sm space-y-1 mb-6">
-              <p>Рост: 180 см</p>
-              <p>Вес: 75 кг</p>
-              <p>Тип: Обезьяна 🐒</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <ProgressBar label="Сила" value={80} />
-              <ProgressBar label="Скорость" value={70} />
-              <ProgressBar label="Выносливость" value={65} />
-            </div>
-          </div>
-        )}
-
-        {activeTab === "workout" && (
-          <div className="text-left w-full max-w-md">
-            <h2 className="text-2xl font-semibold mb-4 text-center">План тренировок</h2>
-            <table className="w-full text-sm text-left text-gray-300 mb-6">
-              <thead className="text-xs uppercase bg-gray-800 text-gray-400">
-                <tr>
-                  <th scope="col" className="px-4 py-2">Упражнение</th>
-                  <th scope="col" className="px-4 py-2">Подходы</th>
-                  <th scope="col" className="px-4 py-2">Повт.</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="bg-gray-900">
-                  <td className="px-4 py-2">Приседания</td>
-                  <td className="px-4 py-2">4</td>
-                  <td className="px-4 py-2">10</td>
-                </tr>
-                <tr className="bg-gray-800">
-                  <td className="px-4 py-2">Жим лёжа</td>
-                  <td className="px-4 py-2">3</td>
-                  <td className="px-4 py-2">8</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {activeTab === "nutrition" && (
-          <div className="text-left w-full max-w-md">
-            <h2 className="text-2xl font-semibold mb-4 text-center">План питания</h2>
-            <table className="w-full text-sm text-left text-gray-300 mb-6">
-              <thead className="text-xs uppercase bg-gray-800 text-gray-400">
-                <tr>
-                  <th scope="col" className="px-4 py-2">Время</th>
-                  <th scope="col" className="px-4 py-2">Приём пищи</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="bg-gray-900">
-                  <td className="px-4 py-2">08:00</td>
-                  <td className="px-4 py-2">Овсянка, яйца</td>
-                </tr>
-                <tr className="bg-gray-800">
-                  <td className="px-4 py-2">13:00</td>
-                  <td className="px-4 py-2">Курица, рис, овощи</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {activeTab === "feedback" && (
-          <div className="text-center">
-            <h2 className="text-2xl font-semibold mb-4">Обратная связь</h2>
-            <p className="text-gray-400 mb-2">Готовые программы, Telegram-бот и контакты</p>
-            <a href="https://t.me/your_bot" className="text-blue-400 underline">Telegram</a>
-          </div>
-        )}
-      </div>
-
-      <nav className="flex justify-around py-4 border-t border-gray-800 bg-gray-900">
-        <button
-          onClick={() => setActiveTab("dashboard")}
-          className={`text-sm ${activeTab === "dashboard" ? "text-white" : "text-gray-500"}`}
-        >Главная</button>
-        <button
-          onClick={() => setActiveTab("workout")}
-          className={`text-sm ${activeTab === "workout" ? "text-white" : "text-gray-500"}`}
-        >Тренировки</button>
-        <button
-          onClick={() => setActiveTab("nutrition")}
-          className={`text-sm ${activeTab === "nutrition" ? "text-white" : "text-gray-500"}`}
-        >Питание</button>
-        <button
-          onClick={() => setActiveTab("feedback")}
-          className={`text-sm ${activeTab === "feedback" ? "text-white" : "text-gray-500"}`}
-        >Связь</button>
-      </nav>
+    <div id="workout" class="hidden text-left w-full max-w-md mt-6">
+      <h2 class="text-2xl font-semibold mb-4 text-center">План тренировок</h2>
+      <table class="w-full text-sm text-left text-gray-300 mb-6">
+        <thead class="text-xs uppercase bg-gray-800 text-gray-400">
+          <tr>
+            <th class="px-4 py-2">Упражнение</th>
+            <th class="px-4 py-2">Подходы</th>
+            <th class="px-4 py-2">Повт.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bg-gray-900">
+            <td class="px-4 py-2">Приседания</td>
+            <td class="px-4 py-2">4</td>
+            <td class="px-4 py-2">10</td>
+          </tr>
+          <tr class="bg-gray-800">
+            <td class="px-4 py-2">Жим лёжа</td>
+            <td class="px-4 py-2">3</td>
+            <td class="px-4 py-2">8</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  );
-}
+
+    <div id="nutrition" class="hidden text-left w-full max-w-md mt-6">
+      <h2 class="text-2xl font-semibold mb-4 text-center">План питания</h2>
+      <table class="w-full text-sm text-left text-gray-300 mb-6">
+        <thead class="text-xs uppercase bg-gray-800 text-gray-400">
+          <tr>
+            <th class="px-4 py-2">Время</th>
+            <th class="px-4 py-2">Приём пищи</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bg-gray-900">
+            <td class="px-4 py-2">08:00</td>
+            <td class="px-4 py-2">Овсянка, яйца</td>
+          </tr>
+          <tr class="bg-gray-800">
+            <td class="px-4 py-2">13:00</td>
+            <td class="px-4 py-2">Курица, рис, овощи</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="feedback" class="hidden text-center mt-6">
+      <h2 class="text-2xl font-semibold mb-4">Обратная связь</h2>
+      <p class="text-gray-400 mb-2">Готовые программы, Telegram-бот и контакты</p>
+      <a href="https://t.me/your_bot" class="text-blue-400 underline">Telegram</a>
+    </div>
+  </main>
+
+  <!-- Навигация -->
+  <footer class="bg-gray-900 text-white py-3 flex justify-around text-sm border-t border-gray-800">
+    <button onclick="showTab('dashboard')">Главная</button>
+    <button onclick="showTab('workout')">Тренировки</button>
+    <button onclick="showTab('nutrition')">Питание</button>
+    <button onclick="showTab('feedback')">Связь</button>
+  </footer>
+
+  <script>
+    c
