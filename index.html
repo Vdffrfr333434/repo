@@ -1,59 +1,166 @@
-<!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Личный Кабинет | Fitness AI</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #111;
-      color: #eee;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      max-width: 700px;
-      margin: auto;
-    }
-    .section {
-      background: #1a1a1a;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-    input, button {
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      margin-top: 10px;
-    }
-    input {
-      width: 100%;
-      background: #333;
-      color: #fff;
-    }
-    button {
-      background: #3af;
-      color: #000;
-      cursor: pointer;
-    }
-    #expired {
-      color: red;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Личный Кабинет</h1><div class="section">
-  <h2>Параметры</h2>
-  <p>ID программы: <span id="program-id"></span></p>
-  <p>Exp. Date: <span id="exp-date"></span></p>
-  <div id="expired"></div>
-</div>
+import { useState, useEffect } from "react";
 
-<div class="section">
-  <h2>Ввод данных тренировки</h2>
-  <input type="number" id="inputValue
+export default function FitnessDashboard() {
+  const [userId, setUserId] = useState("");
+  const [accessGranted, setAccessGranted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("dashboard");
+
+  const handleAccess = () => {
+    const validIds = ["123", "abc", "test"];
+    if (validIds.includes(userId.trim())) {
+      setIsLoading(true);
+      setTimeout(() => {
+        setAccessGranted(true);
+        setIsLoading(false);
+      }, 1500);
+    } else {
+      alert("Неверный ID");
+    }
+  };
+
+  if (!accessGranted) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black text-white z-50">
+        <div className="p-6 bg-gray-900 rounded-xl shadow-lg w-full max-w-sm text-center">
+          <h2 className="text-2xl font-semibold">Введите персональный ID</h2>
+          <input
+            type="text"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            className="mt-4 w-full p-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500"
+            placeholder="Ваш ID"
+          />
+          <button
+            onClick={handleAccess}
+            className="mt-4 w-full bg-white text-black py-2 rounded-md hover:bg-gray-200"
+          >
+            Войти
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black text-white z-50">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-white"></div>
+      </div>
+    );
+  }
+
+  const ProgressBar = ({ label, value }) => (
+    <div className="mb-4">
+      <p className="text-sm mb-1">{label}</p>
+      <div className="w-64 h-3 bg-gray-700 rounded-full">
+        <div
+          className="h-full bg-green-500 rounded-full"
+          style={{ width: `${value}%` }}
+        ></div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      <div className="flex-grow flex items-center justify-center px-4">
+        {activeTab === "dashboard" && (
+          <div className="text-center">
+            <h1 className="text-3xl font-bold mb-4">Личный кабинет</h1>
+            <p className="text-gray-400 mb-4">Ваш ID: {userId}</p>
+            <img src="/3d_body.gif" alt="3D Body" className="w-48 h-auto mx-auto mb-4" />
+            <div className="text-sm space-y-1 mb-6">
+              <p>Рост: 180 см</p>
+              <p>Вес: 75 кг</p>
+              <p>Тип: Обезьяна 🐒</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <ProgressBar label="Сила" value={80} />
+              <ProgressBar label="Скорость" value={70} />
+              <ProgressBar label="Выносливость" value={65} />
+            </div>
+          </div>
+        )}
+
+        {activeTab === "workout" && (
+          <div className="text-left w-full max-w-md">
+            <h2 className="text-2xl font-semibold mb-4 text-center">План тренировок</h2>
+            <table className="w-full text-sm text-left text-gray-300 mb-6">
+              <thead className="text-xs uppercase bg-gray-800 text-gray-400">
+                <tr>
+                  <th scope="col" className="px-4 py-2">Упражнение</th>
+                  <th scope="col" className="px-4 py-2">Подходы</th>
+                  <th scope="col" className="px-4 py-2">Повт.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="bg-gray-900">
+                  <td className="px-4 py-2">Приседания</td>
+                  <td className="px-4 py-2">4</td>
+                  <td className="px-4 py-2">10</td>
+                </tr>
+                <tr className="bg-gray-800">
+                  <td className="px-4 py-2">Жим лёжа</td>
+                  <td className="px-4 py-2">3</td>
+                  <td className="px-4 py-2">8</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {activeTab === "nutrition" && (
+          <div className="text-left w-full max-w-md">
+            <h2 className="text-2xl font-semibold mb-4 text-center">План питания</h2>
+            <table className="w-full text-sm text-left text-gray-300 mb-6">
+              <thead className="text-xs uppercase bg-gray-800 text-gray-400">
+                <tr>
+                  <th scope="col" className="px-4 py-2">Время</th>
+                  <th scope="col" className="px-4 py-2">Приём пищи</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="bg-gray-900">
+                  <td className="px-4 py-2">08:00</td>
+                  <td className="px-4 py-2">Овсянка, яйца</td>
+                </tr>
+                <tr className="bg-gray-800">
+                  <td className="px-4 py-2">13:00</td>
+                  <td className="px-4 py-2">Курица, рис, овощи</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {activeTab === "feedback" && (
+          <div className="text-center">
+            <h2 className="text-2xl font-semibold mb-4">Обратная связь</h2>
+            <p className="text-gray-400 mb-2">Готовые программы, Telegram-бот и контакты</p>
+            <a href="https://t.me/your_bot" className="text-blue-400 underline">Telegram</a>
+          </div>
+        )}
+      </div>
+
+      <nav className="flex justify-around py-4 border-t border-gray-800 bg-gray-900">
+        <button
+          onClick={() => setActiveTab("dashboard")}
+          className={`text-sm ${activeTab === "dashboard" ? "text-white" : "text-gray-500"}`}
+        >Главная</button>
+        <button
+          onClick={() => setActiveTab("workout")}
+          className={`text-sm ${activeTab === "workout" ? "text-white" : "text-gray-500"}`}
+        >Тренировки</button>
+        <button
+          onClick={() => setActiveTab("nutrition")}
+          className={`text-sm ${activeTab === "nutrition" ? "text-white" : "text-gray-500"}`}
+        >Питание</button>
+        <button
+          onClick={() => setActiveTab("feedback")}
+          className={`text-sm ${activeTab === "feedback" ? "text-white" : "text-gray-500"}`}
+        >Связь</button>
+      </nav>
+    </div>
+  );
+}
