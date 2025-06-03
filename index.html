@@ -27,7 +27,6 @@
     input, button {
       padding: 8px;
       margin-top: 10px;
-      width: 100%;
       border: none;
       border-radius: 5px;
       font-size: 0.9rem;
@@ -35,14 +34,20 @@
     input {
       background: #222;
       color: white;
+      width: 100%;
+      box-sizing: border-box;
     }
     button {
       background: white;
       color: black;
       cursor: pointer;
       font-weight: bold;
+      width: 100%;
+      box-sizing: border-box;
     }
-    .hidden { display: none; }
+    .hidden { 
+      display: none !important; 
+    }
 
     .avatar {
       width: 120px;
@@ -72,10 +77,12 @@
       font-weight: 600;
       color: #eee;
       white-space: nowrap;
+      min-width: 33%;
+      box-sizing: border-box;
     }
     .name { text-align: left; }
-    .number { text-align: center; margin: 0 auto; }
-    .gender { text-align: right; margin-left: auto; }
+    .number { text-align: center; }
+    .gender { text-align: right; }
 
     .info-row {
       display: flex;
@@ -93,29 +100,27 @@
       flex: 1 1 220px;
       min-width: 220px;
       box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
     }
 
-    .info-row-table {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      font-weight: 500;
+    table {
+      width: 100%;
+      border-collapse: collapse;
       color: #eee;
-      padding: 2px 0;
+      font-weight: 500;
+      font-size: 0.75rem;
+      line-height: 1.1;
     }
-
-    .label {
+    th, td {
+      padding: 4px 2px;
+      font-weight: 500;
+    }
+    th {
+      color: #ccc;
       text-align: left;
-      flex-grow: 1;
+      width: 50%;
     }
-
-    .value {
+    td {
       text-align: right;
-      min-width: 50px;
-      flex-shrink: 0;
     }
 
     .bars-container {
@@ -141,18 +146,17 @@
       font-weight: 600;
       color: #ddd;
       user-select: none;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       text-align: center;
-      width: 100%;
     }
 
     .bar {
       display: flex;
       gap: 3px;
-      height: 8px;
+      height: 6px;
       border-radius: 6px;
       width: 100%;
-      max-width: 450px;
+      max-width: 460px;
     }
 
     .segment {
@@ -171,39 +175,84 @@
       color: #f66;
       font-size: 0.8rem;
       margin-top: 6px;
+      padding: 6px 10px;
+      border: 1px solid #f66;
+      border-radius: 6px;
       display: none;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+      user-select: none;
+    }
+
+    #loader {
+      width: 100%;
+      max-width: 520px;
+      height: 5px;
+      background: #222;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 12px;
+      display: none;
+    }
+    #loader > div {
+      height: 100%;
+      background: #ffd700;
+      width: 0%;
+      animation: loadingBar 2s linear forwards;
+    }
+    @keyframes loadingBar {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+
+    #auth-screen {
+      width: 30vw;
+      min-width: 220px;
+      max-width: 320px;
+      text-align: center;
+    }
+    #auth-screen h3 {
+      font-size: 1rem;
+      margin-bottom: 8px;
     }
   </style>
 </head>
 <body>
   <div id="auth-screen" class="center">
-    <h3 style="margin-bottom: 8px; font-size: 0.95rem;">Введите персональный ID</h3>
+    <h3>Введите персональный ID</h3>
     <input id="user-id" type="text" placeholder="Ваш ID" autocomplete="off" />
     <button onclick="checkId()">Войти</button>
     <div id="error-msg">Неверный ID</div>
+    <div id="loader"><div></div></div>
   </div>
 
-  <div id="main-screen" class="hidden center">
+  <div id="main-screen" class="hidden center" style="margin-top: 30px;">
     <h2>Личный кабинет</h2>
     <div class="avatar"></div>
     <div class="profile-info">
-      <div class="name">Иван Иванов</div>
-      <div class="number">№123</div>
-      <div class="gender">Мужской</div>
+      <div class="name">Саша</div>
+      <div class="number">Звено #8712</div>
+      <div class="gender">Женщина</div>
     </div>
 
     <div class="info-row">
       <div class="info-block">
-        <div class="info-row-table"><div class="label">Рост</div><div class="value">180 см</div></div>
-        <div class="info-row-table"><div class="label">Вес</div><div class="value">75 кг</div></div>
-        <div class="info-row-table"><div class="label">Возраст</div><div class="value">29 лет</div></div>
-        <div class="info-row-table"><div class="label">Стаж</div><div class="value">5 лет</div></div>
+        <table>
+          <tr><th>Рост</th><td>170 см</td></tr>
+          <tr><th>Вес</th><td>50 кг</td></tr>
+          <tr><th>Возраст</th><td>19 лет</td></tr>
+          <tr><th>Стаж</th><td>5 лет</td></tr>
+        </table>
       </div>
       <div class="info-block">
-        <div class="info-row-table"><div class="label">Индекс обезьяны</div><div class="value">1.2</div></div>
-        <div class="info-row-table"><div class="label">Индекс ленивца</div><div class="value">1.1</div></div>
-        <div class="info-row-table"><div class="label">Индекс жабы</div><div class="value">1.3</div></div>
-        <div class="info-row-table"><div class="label">Индекс паука</div><div class="value">1.4</div></div>
+        <table>
+          <tr><th>Индекс обезьяны</th><td>1.2</td></tr>
+          <tr><th>Индекс ленивца</th><td>1.1</td></tr>
+          <tr><th>Индекс жабы</th><td>1.3</td></tr>
+          <tr><th>Индекс паука</th><td>1.4</td></tr>
+        </table>
       </div>
     </div>
 
@@ -226,12 +275,21 @@
     function checkId() {
       const userId = document.getElementById("user-id").value.trim();
       const error = document.getElementById("error-msg");
+      const loader = document.getElementById("loader");
       error.style.display = "none";
 
       if (validIds.includes(userId)) {
-        document.getElementById("auth-screen").classList.add("hidden");
-        document.getElementById("main-screen").classList.remove("hidden");
-        renderBars();
+        // Показать лоадбар и спрятать ошибку
+        loader.style.display = "block";
+        document.querySelector("#loader > div").style.width = "0%";
+        document.querySelector("#loader > div").style.animation = "loadingBar 2s linear forwards";
+
+        // Через 2 секунды скрыть форму и показать основной экран
+        setTimeout(() => {
+          document.getElementById("auth-screen").style.display = "none";
+          document.getElementById("main-screen").classList.remove("hidden");
+          renderBars();
+        }, 2000);
       } else {
         error.style.display = "block";
       }
