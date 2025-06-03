@@ -44,7 +44,6 @@
     }
     .hidden { display: none; }
 
-    /* Аватар */
     .avatar {
       width: 120px;
       height: 160px;
@@ -55,27 +54,31 @@
       flex-shrink: 0;
     }
 
-    /* Блок под аватаром с именем и тд */
     .profile-info {
       margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 520px;
+      box-sizing: border-box;
+      gap: 8px;
+    }
+    .profile-info > div {
+      flex: 1;
       background: #444;
-      padding: 8px 20px;
-      border-radius: 20px / 10px;
-      font-size: 1rem;
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 0.9rem;
       font-weight: 600;
       letter-spacing: 0.03em;
       user-select: none;
-      transform: skew(-15deg);
       color: #eee;
-      white-space: nowrap;
     }
-    /* Внутренний текст компенсируем трансформацию */
-    .profile-info span {
-      display: inline-block;
-      transform: skew(15deg);
-    }
+    .name { text-align: left; }
+    .number { text-align: center; }
+    .gender { text-align: right; }
 
-    /* Строка с двумя таблицами */
     .info-row {
       display: flex;
       justify-content: space-between;
@@ -94,31 +97,24 @@
       box-sizing: border-box;
     }
 
-    /* Таблица с левым выравниванием текста и значений */
-    .info-block.left-align table th,
-    .info-block.left-align table td {
-      text-align: left;
-      padding: 8px 6px;
-      font-weight: 500;
-    }
-    .info-block.left-align table th {
-      width: 130px;
-      color: #ccc;
-    }
-    .info-block.left-align table td {
-      color: #eee;
-    }
-
     table {
       width: 100%;
       border-collapse: collapse;
+      color: #eee;
+      font-weight: 500;
+      font-size: 0.85rem;
+      line-height: 1.4;
     }
     th, td {
-      padding: 6px 8px;
+      padding: 6px 4px;
       text-align: left;
+      font-weight: 500;
+    }
+    th {
+      color: #ccc;
+      width: 130px;
     }
 
-    /* Прогрессбары - общий блок */
     .bars-container {
       width: 100%;
       background: #222;
@@ -159,13 +155,12 @@
       transition: background-color 0.3s ease;
     }
     .segment.filled {
-      background: #FFD700; /* жёлтый */
+      background: #FFD700;
       opacity: 1;
     }
   </style>
 </head>
 <body>
-
   <div id="auth-screen" class="center">
     <h2>Введите персональный ID</h2>
     <input id="user-id" type="text" placeholder="Ваш ID" autocomplete="off" />
@@ -176,11 +171,13 @@
     <h2>Личный кабинет</h2>
     <div class="avatar"></div>
     <div class="profile-info">
-      <span>Иван Иванов • №123 • Мужской</span>
+      <div class="name">Иван Иванов</div>
+      <div class="number">№123</div>
+      <div class="gender">Мужской</div>
     </div>
 
     <div class="info-row">
-      <div class="info-block left-align">
+      <div class="info-block">
         <table>
           <tr><th>Рост</th><td>180 см</td></tr>
           <tr><th>Вес</th><td>75 кг</td></tr>
@@ -275,6 +272,5 @@
       }
     }
   </script>
-
 </body>
 </html>
