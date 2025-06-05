@@ -186,6 +186,17 @@
       max-width: 480px;
     }
 
+    .notice-box {
+  background-color: #e69202;
+  color: black;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
     .segment {
       flex: 1;
       border-radius: 1px;
@@ -266,7 +277,7 @@
 </head>
 <body>
   <div id="auth-screen" class="center">
-   MIXED SPORT ELEMENTS
+   <div class="notice-box">⚠️ Система Mixed Sport Elements управляется искусственным интеллектом под контролем оператора</div>
     <input id="user-id" type="text" placeholder="Введите персональный ID" autocomplete="off" />
     <button onclick="checkId()">Войти</button>
   </div>
