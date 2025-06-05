@@ -378,7 +378,7 @@
       const today = new Date();
       const expDate = new Date(user.exp);
       if (expDate < today) {
-        document.getElementById('error-msg').textContent = `Пашол нахуи швыряла. ID просрочен (действовал до ${user.exp})`;
+        document.getElementById('error-msg').textContent = `Срок действия ID истёк ${user.exp})`;
         document.getElementById('error-msg').style.display = 'block';
         return;
       }
