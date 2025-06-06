@@ -76,6 +76,16 @@
       margin-bottom: 16px;
       flex-shrink: 0;
     }
+    .gray-box {
+  background: #1c1c1c; /* такой же фон */
+  color: white;
+  padding: 8px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  text-align: center;
+}
 
     #profile-container {
       background: #111;
@@ -299,7 +309,7 @@
       </table>
     </div>
 
-    <div id="morpho-title" onclick="openMorphoInfo()">🦍 Морфометрия 🐊</div><br>
+    <div class="gray-box"><div id="morpho-title" onclick="openMorphoInfo()">🦍 Морфометрия 🐊</div></div><br>
     <div class="info-block">
       <table>
         <tbody id="morpho-info"></tbody>
