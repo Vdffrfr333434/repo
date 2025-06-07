@@ -130,40 +130,32 @@
       margin-bottom: 10px;
     }
 
-    .bottom-buttons {
-    position: fixed;
-    bottom: 16px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-evenly;
-    padding: 0 16px;
-    z-index: 1000;
-  }
-
-  .bottom-btn {
-    flex: 1;
-    margin: 0 6px;
-    padding: 14px 0;
-    text-align: center;
-    background-color: #0088cc;
-    color: white;
+    .glass-button {
+    display: inline-block;
+    padding: 14px 24px;
+    margin: 24px auto;
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 12px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #fff;
+    text-decoration: none;
     font-size: 16px;
     font-weight: 600;
-    text-decoration: none;
-    transition: background-color 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    text-align: center;
   }
 
-  .bottom-btn:hover {
-    background-color: #0071aa;
+  .glass-button:hover {
+    background: rgba(255, 255, 255, 0.25);
   }
 
-  @media (max-width: 480px) {
-    .bottom-btn {
-      font-size: 15px;
-      padding: 12px 0;
-    }
+  body {
+    background: url('https://source.unsplash.com/600x800/?nature') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 200vh; /* для демонстрации прокрутки */
+    padding: 24px;
   }
 
     table {
@@ -379,13 +371,7 @@
     <br>
 
     <div class="bars-container" id="bars-container"></div>
-    <a href="https://t.me/MSE_Admin" target="_blank">
-  <img src="https://github.com/Vdffrfr333434/repo/blob/main/FDBK.png?raw=true" alt="Обратная связь" style="width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 4px" />
-</a>
-
-    <div class="bottom-buttons">
-  <a href="https://example.com/materials" target="_blank" class="bottom-btn">Мои материалы</a>
-  <a href="https://example.com/feedback" target="_blank" class="bottom-btn">Обратная связь</a>
+    <a href="https://example.com" target="_blank" class="glass-button">Перейти в канал</a>
 </div>
     
   </div>
