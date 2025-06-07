@@ -208,6 +208,30 @@
       cursor: pointer;
     }
 
+    /* CSS */
+.glass-button {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.1); /* полупрозрачный фон */
+  backdrop-filter: blur(10px); /* размытие заднего фона */
+  -webkit-backdrop-filter: blur(10px); /* для Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  border-radius: 12px;
+  font-size: 1rem;
+  z-index: 999;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+
     .bar {
       display: flex;
       gap: 3px;
@@ -355,6 +379,11 @@
     📑 Мои материалы
   </div>
 </a>
+
+    <button class="glass-button" onclick="window.open('https://t.me/yourchannel', '_blank')">
+  Открыть канал
+</button>
+    
   </div>
 
   <div id="loader-bar" class="hidden"></div>
