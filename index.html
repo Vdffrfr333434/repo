@@ -40,6 +40,12 @@
       font-size: 18px;
       font-weight: bold;
       color: #333;
+      margin-bottom: 10px;
+    }
+
+    #debug {
+      font-size: 14px;
+      color: #888;
     }
   </style>
 </head>
@@ -47,10 +53,12 @@
   <h1>Подтвердите вход</h1>
   <div id="scanner"></div>
   <div id="status">Ожидание подтверждения…</div>
+  <p id="debug"></p>
 
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const status = document.getElementById('status');
+      const debug = document.getElementById('debug');
 
       function showError(message) {
         status.textContent = '❌ ' + message;
@@ -62,29 +70,40 @@
         status.style.color = 'green';
       }
 
-      // Проверяем наличие Telegram WebApp
-      if (!window.Telegram || !Telegram.WebApp) {
-        showError('Telegram WebApp API недоступен.');
-        return;
+      function runApp(user) {
+        if (!user) {
+          showError('Пользователь не авторизован.');
+        } else {
+          showSuccess(user);
+          // Можно отправить данные обратно в Telegram-бот, если нужно
+          if (window.Telegram && Telegram.WebApp) {
+            Telegram.WebApp.sendData(JSON.stringify({
+              type: 'auth',
+              user_id: user.id,
+              username: user.username || null,
+              first_name: user.first_name
+            }));
+          }
+        }
       }
 
-      const tg = Telegram.WebApp;
-      tg.ready();
+      // Проверка: работаем ли мы в Telegram?
+      if (window.Telegram && Telegram.WebApp) {
+        debug.textContent = '✅ Telegram WebApp API доступен';
+        const tg = Telegram.WebApp;
+        tg.ready();
 
-      const user = tg.initDataUnsafe?.user;
-
-      if (!user) {
-        showError('Пользователь не авторизован в Telegram.');
+        const user = tg.initDataUnsafe?.user;
+        runApp(user);
       } else {
-        showSuccess(user);
-
-        // Отправим данные обратно в Telegram-бот, если нужно
-        tg.sendData(JSON.stringify({
-          type: 'auth',
-          user_id: user.id,
-          username: user.username || null,
-          first_name: user.first_name
-        }));
+        debug.textContent = '⚠️ Telegram WebApp API НЕ доступен (вы в браузере?) — включен режим отладки';
+        // Отладочный режим — фейковый пользователь
+        const testUser = {
+          id: 123456,
+          first_name: 'Тест',
+          username: 'test_user'
+        };
+        runApp(testUser);
       }
     });
   </script>
