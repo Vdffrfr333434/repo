@@ -1,16 +1,72 @@
 <!DOCTYPE html>
-<html>
-<head><title>Проверка Telegram WebApp</title></head>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WebAuthn Пример</title>
+<style>
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    padding: 2rem;
+  }
+  button {
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+  }
+  #status {
+    margin-top: 1.5rem;
+    font-weight: bold;
+  }
+</style>
+</head>
 <body>
-  <h2 id="status">Проверяем Telegram.WebApp...</h2>
+<h1>Подтверждение с помощью биометрии</h1>
+<button id="authBtn">Отсканировать отпечаток / Face ID</button>
+<div id="status"></div>
 
-  <script>
-    if (window.Telegram && Telegram.WebApp) {
-      Telegram.WebApp.ready();
-      document.getElementById('status').textContent = "✅ Telegram.WebApp доступен!";
-    } else {
-      document.getElementById('status').textContent = "❌ Telegram.WebApp НЕ доступен. Открыто вне Telegram?";
+<script>
+  const status = document.getElementById('status');
+  const authBtn = document.getElementById('authBtn');
+
+  // Проверяем поддержку WebAuthn
+  if (!window.PublicKeyCredential) {
+    status.textContent = 'Ваш браузер не поддерживает WebAuthn';
+    authBtn.disabled = true;
+  }
+
+  // Функция для запроса аутентификации
+  async function authenticate() {
+    status.textContent = 'Запрос аутентификации...';
+
+    try {
+      // Обычно сервер генерирует challenge, но для примера — простой рандом
+      const challenge = new Uint8Array(32);
+      window.crypto.getRandomValues(challenge);
+
+      const publicKey = {
+        challenge: challenge,
+        timeout: 60000,
+        userVerification: 'required',
+        allowCredentials: [] // пустой, чтобы запросить любой зарегистрированный ключ
+      };
+
+      const credential = await navigator.credentials.get({ publicKey });
+
+      if (credential) {
+        status.textContent = '✅ Аутентификация успешна!';
+        // Здесь можно отправить credential на сервер для проверки
+        console.log(credential);
+      } else {
+        status.textContent = '❌ Аутентификация не удалась';
+      }
+    } catch (err) {
+      status.textContent = `Ошибка: ${err.message}`;
+      console.error(err);
     }
-  </script>
+  }
+
+  authBtn.addEventListener('click', authenticate);
+</script>
 </body>
 </html>
