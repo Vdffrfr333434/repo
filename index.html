@@ -1,580 +1,79 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Фитнес Дашборд</title>
+  <meta charset="UTF-8">
+  <title>Биометрическая авторизация</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      margin: 0;
-      background: #000;
-      color: #fff;
       font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .center {
-      width: 100%;
-      max-width: 520px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      text-align: center;
+      padding: 50px;
+      background: #f0f0f0;
     }
 
-    #auth-screen {
-      width: 50vw;
-      max-width: 600px;
-      min-width: 300px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: #111;
-      padding: 20px;
-      border-radius: 12px;
-      box-sizing: border-box;
-      margin-bottom: 16px;
-      user-select: none;
-    }
-
-    #auth-screen h3 {
-      margin-bottom: 8px;
-      font-size: 1rem;
-      color: #eee;
-    }
-
-    input, button {
-      padding: 8px;
-      margin-top: 10px;
-      width: 100%;
+    #authBtn {
+      padding: 12px 24px;
+      font-size: 18px;
       border: none;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      box-sizing: border-box;
-      display: block;
-    }
-    input {
-      background: #1c1c1c;
-      color: #de910b;
-    }
-    button {
-      background: #1c1c1c;
-      color: #de910b;
+      background-color: #2a9df4;
+      color: white;
+      border-radius: 8px;
       cursor: pointer;
+    }
+
+    #authBtn:hover {
+      background-color: #2388cc;
+    }
+
+    #status {
+      margin-top: 20px;
       font-weight: bold;
-    }
-    .hidden { display: none; }
-
-    .avatar {
-      width: 100%;
-      height: 160%;
-      background: #888;
-      border: 2px solid #aaa;
-      border-radius: 4px;
-      margin-bottom: 16px;
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-    .avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* или cover */
-  display: block;
-}
-    .gray-box {
-  background: #111; /* такой же фон */
-  color: white;
-  width: 80%;
-  padding: 2px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-    #profile-container {
-      background: #111;
-      padding: 8px 16px;
-      border-radius: 4px;
-      color: #eee;
-      font-weight: 600;
-      font-size: 0.9rem;
-      user-select: none;
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-      align-items: center;
-    }
-    #profile-number {
-      font-size: 0.9rem;
-    }
-    #profile-expiry {
-      color: #9dd5ff;
-      background: #1a1a2e;
-      border: 1px solid #3399ff;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-    }
-
-    .info-block {
-      background: #111;
-      padding: 12px 16px;
-      border-radius: 4px;
-      width: 100%;
-      box-sizing: border-box;
-      margin-bottom: 10px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      color: #eee;
-      font-weight: 500;
-      font-size: 0.75rem;
-      line-height: 1.2;
-    }
-    th, td {
-      padding: 4px 2px;
-      font-weight: 500;
-      font-size: 0.75rem;
-      line-height: 1.2;
-    }
-    th {
-      color: #ccc;
-      text-align: left;
-      width: 50%;
-    }
-    td {
-      text-align: right;
-    }
-
-    #morpho-title {
-      font-size: 0.85rem;
-      color: white;
-      border-radius: 4px;
-      margin-bottom: 2px;
-      cursor: pointer;
-      user-select: none;
-      max-width: 520px;
-      width: 100%;
-      text-align: center;
-    }
-    
-    #prog-title {
-      font-size: 0.85rem;
-      border-radius: 4px;
-      color: white;
-      margin-bottom: 2px;
-      cursor: pointer;
-      user-select: none;
-      max-width: 520px;
-      width: 100%;
-      text-align: center;
-    }
-
-    .bars-container {
-      width: 100%;
-      background: #111;
-      padding: 20px 25px;
-      border-radius: 4px;
-      box-sizing: border-box;
-      margin-bottom: 60px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-width: 520px;
-    }
-
-    .bar-row {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      width: 100%;
-    }
-
-    .bar-label {
-      font-weight: 600;
-      color: #ddd;
-      user-select: none;
-      font-size: 0.85rem;
-      text-align: center;
-      width: 100%;
-      cursor: pointer;
-    }
-
-    /* CSS */
-.glass-button {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.1); /* полупрозрачный фон */
-  backdrop-filter: blur(10px); /* размытие заднего фона */
-  -webkit-backdrop-filter: blur(10px); /* для Safari */
-  border: 0px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
-  border-radius: 12px;
-  font-size: 1rem;
-  z-index: 999;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.glass-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-
-    .bar {
-      display: flex;
-      gap: 3px;
-      height: 6px;
-      border-radius: 4px;
-      width: 100%;
-      max-width: 480px;
-    }
-
-    .notice-box {
-  background-color: #201a0f;
-  color: #de910b;
-  border: 1px solid #de910b;
-  border-radius: 4px;
-  padding: 5px;
-  text-align: center;
-  font-size: 0.85rem;
-  font-weight: normal;
-  margin-bottom: 5px;
-}
-    .notice-box2 {
-  background-color: #1a1a2e;
-  color: #9dd5ff;
-  border: 1px solid #3399ff;
-  border-radius: 4px;
-  padding: 5px;
-  text-align: center;
-  font-size: 0.75rem;
-  font-weight: normal;
-  margin-bottom: 2px;
-}
-
-    .segment {
-      flex: 1;
-      border-radius: 1px;
-      background: #38a9f5;
-      opacity: 0.3;
-      transition: background-color 0.3s ease;
-    }
-    .segment.filled {
-      background: #38a9f5;
-      opacity: 1;
-    }
-
-    #error-msg {
-      color: #8a0606;
-      background: #1c0000;
-      font-size: 0.8rem;
-      margin-top: 6px;
-      display: none;
-      border: 1.5px solid #de0b0b;
-      padding: 5px 8px;
-      border-radius: 4px;
-      user-select: none;
-    }
-
-    #loader-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 3px;
-      background: #68c43b;
-      width: 0%;
-      transition: width 1.5s linear;
-      z-index: 2000;
-    }
-
-    #blur-background {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(5px);
-      z-index: 1000;
-    }
-
-    #info-popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      max-width: 280px;
-      width: 80vw;
-      transform: translate(-50%, -50%);
-      background: #222;
-      border-radius: 4px;
-      padding: 16px 22px;
-      color: #ddd;
-      font-size: 0.85rem;
-      z-index: 1001;
-      box-shadow: 0 0 15px #000a;
-      user-select: none;
-    }
-
-    #info-popup.hidden, #blur-background.hidden {
-      display: none;
-    }
-
-    #info-popup button {
-      background: #444;
-      border: none;
-      color: #ddd;
-      font-weight: 600;
-      padding: 6px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      width: 100%;
-      font-size: 0.9rem;
-      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div id="auth-screen" class="center">
-   <div class="notice-box">⚠️Статус: Сейчас система MSE управляется продвинутым искусственным интеллектом под контролем оператора. </div>
-    <input id="user-id" type="text" placeholder="Введите ID..." autocomplete="off" />
-    <button onclick="handleAuth()">Авторизация</button>
-    </div>
-  <div id="error-msg">Вы ввели неверный ID</div>
+  <h1>Добро пожаловать 👋</h1>
+  <p>Подтвердите личность через отпечаток пальца или Face ID</p>
+  <button id="authBtn">Войти с биометрией</button>
+  <div id="status"></div>
 
-  <div id="main-screen" class="hidden center">
-    <div class="avatar"><img src="https://github.com/Vdffrfr333434/repo/blob/main/MSE%20TOP.png?raw=true" alt="Аватар"></div>
-    <div id="profile-container"> 
-      <span id="profile-number">🔗</span>
-      <span id="profile-expiry">действует до</span> 
-     </div> 
-     
-    <div class="info-block">
-      <table>
-        <tbody id="basic-info"></tbody>
-      </table>
-    </div>
-
-    <div class="notice-box2"><div id="morpho-title" onclick="openMorphoInfo()">🦍 Морфометрия</div></div><br>
-    <div class="info-block">
-      <table>
-        <tbody id="morpho-info"></tbody>
-      </table>
-    </div>
-
-    <div class="notice-box2"><div id="prog-title" onclick="openProgInfo()"> 🏃‍♀ Характеристики</div></div>
-    <br>
-
-    <div class="bars-container" id="bars-container"></div>
-       <button class="glass-button" onclick="window.open('https://t.me/yourchannel', '_blank')">
-  ✉️ Обратная связь 
-</button>
-    
-  </div>
-
-  <div id="loader-bar" class="hidden"></div>
-
-  <div id="info-popup" class="hidden">
-    <div id="popup-content"></div>
-    <button onclick="closePopup()">Назад</button>
-  </div>
-  <div id="blur-background" class="hidden"></div>
-
-  
   <script>
-    const users = {
-  ID001: {
-    basic: {Рост: '172 см', Вес: '70 кг', Возраст: '27 лет', Стаж: '3 года'},
-    morpho: {'Индекс обезьяны': 1.2, 'Индекс ленивца': 1.0, 'Индекс жабы': 1.1, 'Индекс паука': 1.3},
-    bars: {'💪 Максимальная сила': 7,'⚡️ Максимальная скорость': 6,'✊ Энергия / Выносливость': 5,'🖖 Эластичность': 4,'🦶 Мобильность': 6,'👌 Метаболическая гибкость': 5,'👊 Взрывная сила': 6,'🦵 Координация и баланс': 7,'🤝 Работа в паре': 6},
-    exp: '2025-12-31'
-  },
-  ID002: {
-    basic: {Рост: 'лошад  см', Вес: 'Дохуя', Возраст: 'не помню лет', Стаж: 'вся жизнь лет'},
-    morpho: {'Индекс обезьяны': 1.3, 'Индекс ленивца': 1.1, 'Индекс жабы': 1.2, 'Индекс паука': 1.4},
-    bars: {'💪 Максимальная сила': 10,'⚡️ Максимальная скорость': 7,'✊ Энергия / Выносливость': 6,'🖖 Эластичность': 5,'🦶 Мобильность': 5,'👌 Метаболическая гибкость': 7,'👊 Взрывная сила': 7,'🦵 Координация и баланс': 6,'🤝 Работа в паре': 5},
-    exp: '2020-12-15'
-  },
-  ID003: {
-    basic: {Рост: '165 см', Вес: '60 кг', Возраст: '24 лет', Стаж: '2 года'},
-    morpho: {'Индекс обезьяны': 1.0, 'Индекс ленивца': 1.2, 'Индекс жабы': 1.1, 'Индекс паука': 1.2},
-    bars: {'💪 Максимальная сила': 5,'⚡️ Максимальная скорость': 8,'✊ Энергия / Выносливость': 6,'🖖 Эластичность': 7,'🦶 Мобильность': 7,'👌 Метаболическая гибкость': 6,'👊 Взрывная сила': 5,'🦵 Координация и баланс': 6,'🤝 Работа в паре': 8},
-    exp: '2026-03-01'
-  },
-  ID004: {
-    basic: {Рост: '190 см', Вес: '90 кг', Возраст: '35 лет', Стаж: '10 лет'},
-    morpho: {'Индекс обезьяны': 1.4, 'Индекс ленивца': 1.0, 'Индекс жабы': 1.3, 'Индекс паука': 1.5},
-    bars: {'💪 Максимальная сила': 9,'⚡️ Максимальная скорость': 6,'✊ Энергия / Выносливость': 7,'🖖 Эластичность': 4,'🦶 Мобильность': 4,'👌 Метаболическая гибкость': 6,'👊 Взрывная сила': 8,'🦵 Координация и баланс': 5,'🤝 Работа в паре': 5},
-    exp: '2025-11-30'
-  },
-  ID005: {
-    basic: {Рост: '168 см', Вес: '64 кг', Возраст: '22 года', Стаж: '1 год'},
-    morpho: {'Индекс обезьяны': 1.1, 'Индекс ленивца': 1.2, 'Индекс жабы': 1.0, 'Индекс паука': 1.3},
-    bars: {'💪 Максимальная сила': 4,'⚡️ Максимальная скорость': 8,'✊ Энергия / Выносливость': 5,'🖖 Эластичность': 6,'🦶 Мобильность': 7,'👌 Метаболическая гибкость': 5,'👊 Взрывная сила': 4,'🦵 Координация и баланс': 6,'🤝 Работа в паре': 7},
-    exp: '2026-05-20'
-  },
-  ID006: {
-    basic: {Рост: '175 см', Вес: '75 кг', Возраст: '28 лет', Стаж: '4 года'},
-    morpho: {'Индекс обезьяны': 1.3, 'Индекс ленивца': 1.1, 'Индекс жабы': 1.2, 'Индекс паука': 1.4},
-    bars: {'💪 Максимальная сила': 7,'⚡️ Максимальная скорость': 7,'✊ Энергия / Выносливость': 6,'🖖 Эластичность': 6,'🦶 Мобильность': 6,'👌 Метаболическая гибкость': 6,'👊 Взрывная сила': 7,'🦵 Координация и баланс': 6,'🤝 Работа в паре': 6},
-    exp: '2025-10-12'
-  },
-  T790RY: {
-    basic: {Рост: '161 см', Вес: '50 кг', Возраст: '19 лет', Стаж: '2 года'},
-    morpho: {'Индекс обезьяны': 1.0, 'Индекс ленивца': 1.1, 'Индекс жабы': 1.0, 'Индекс паука': 1.2},
-    bars: {'💪 Максимальная сила': 4,'⚡️ Максимальная скорость': 6,'✊ Энергия / Выносливость': 5,'🖖 Эластичность': 9,'🦶 Мобильность': 9,'👌 Метаболическая гибкость': 5,'👊 Взрывная сила': 3,'🦵 Координация и баланс': 8,'🤝 Работа в паре': 5},
-    exp: '2026-01-01'
-  },
-  ID008: {
-    basic: {Рост: '178 см', Вес: '80 кг', Возраст: '30 лет', Стаж: '6 лет'},
-    morpho: {'Индекс обезьяны': 1.3, 'Индекс ленивца': 1.2, 'Индекс жабы': 1.3, 'Индекс паука': 1.5},
-    bars: {'💪 Максимальная сила': 8,'⚡️ Максимальная скорость': 6,'✊ Энергия / Выносливость': 7,'🖖 Эластичность': 5,'🦶 Мобильность': 5,'👌 Метаболическая гибкость': 6,'👊 Взрывная сила': 8,'🦵 Координация и баланс': 6,'🤝 Работа в паре': 5},
-    exp: '2025-09-15'
-  },
-  ID009: {
-    basic: {Рост: '182 см', Вес: '85 кг', Возраст: '33 года', Стаж: '9 лет'},
-    morpho: {'Индекс обезьяны': 1.2, 'Индекс ленивца': 1.1, 'Индекс жабы': 1.1, 'Индекс паука': 1.3},
-    bars: {'💪 Максимальная сила': 8,'⚡️ Максимальная скорость': 7,'✊ Энергия / Выносливость': 6,'🖖 Эластичность': 5,'🦶 Мобильность': 6,'👌 Метаболическая гибкость': 7,'👊 Взрывная сила': 7,'🦵 Координация и баланс': 6,'🤝 Работа в паре': 6},
-    exp: '2025-08-10'
-  },
-  ID010: {
-    basic: {Рост: '170 см', Вес: '68 кг', Возраст: '26 лет', Стаж: '3 года'},
-    morpho: {'Индекс обезьяны': 1.1, 'Индекс ленивца': 1.0, 'Индекс жабы': 1.2, 'Индекс паука': 1.3},
-    bars: {'💪 Максимальная сила': 6,'⚡️ Максимальная скорость': 6,'✊ Энергия / Выносливость': 6,'🖖 Эластичность': 5,'🦶 Мобильность': 6,'👌 Метаболическая гибкость': 6,'👊 Взрывная сила': 6,'🦵 Координация и баланс': 7,'🤝 Работа в паре': 6},
-    exp: '2026-04-04'
-  },
-  // ...
-  // Добавь ID011 - ID020 по аналогии или сообщи, если хочешь, чтобы я продолжил.
-};
+    document.addEventListener("DOMContentLoaded", async () => {
+      const authBtn = document.getElementById("authBtn");
+      const statusDiv = document.getElementById("status");
 
-
-    function checkId() {
-      const val = document.getElementById('user-id').value.trim();
-      const user = users[val];
-      if (!user) {
-        document.getElementById('error-msg').textContent = 'Неверный ID';
-        document.getElementById('error-msg').style.display = 'block';
-        return;
-      }
-      const today = new Date();
-      const expDate = new Date(user.exp);
-      if (expDate < today) {
-        document.getElementById('error-msg').textContent = `Срок действия ID истёк ${user.exp})`;
-        document.getElementById('error-msg').style.display = 'block';
-        return;
-      }
-      document.getElementById('error-msg').style.display = 'none';
-      showLoader().then(() => {
-        document.getElementById('auth-screen').style.display = 'none';
-        document.getElementById('main-screen').classList.remove('hidden');
-        loadUserData(val);
-      });
-    }
-
-    function showLoader() {
-      return new Promise((resolve) => {
-        const loader = document.getElementById('loader-bar');
-        loader.style.width = '0%';
-        loader.classList.remove('hidden');
-        setTimeout(() => loader.style.width = '100%', 20);
-        setTimeout(() => {
-          loader.classList.add('hidden');
-          resolve();
-        }, 1600);
-      });
-    }
-
-    function loadUserData(id) {
-      const user = users[id];
-      document.getElementById('profile-number').textContent = `🔗${id}`;
-      document.getElementById('profile-expiry').textContent = `действует до ${user.exp}`;
-      const basicInfo = document.getElementById('basic-info');
-      const morphoInfo = document.getElementById('morpho-info');
-      basicInfo.innerHTML = morphoInfo.innerHTML = '';
-      for (let [key, val] of Object.entries(user.basic)) {
-        basicInfo.innerHTML += `<tr><th>${key}</th><td>${val}</td></tr>`;
-      }
-      for (let [key, val] of Object.entries(user.morpho)) {
-        morphoInfo.innerHTML += `<tr><th>${key}</th><td>${val}</td></tr>`;
-      }
-      const barsContainer = document.getElementById('bars-container');
-      barsContainer.innerHTML = '';
-      for (let [label, val] of Object.entries(user.bars)) {
-        const row = document.createElement('div');
-        row.className = 'bar-row';
-        const labelEl = document.createElement('div');
-        labelEl.className = 'bar-label';
-        labelEl.textContent = label;
-        
-        const bar = document.createElement('div');
-        bar.className = 'bar';
-        for (let i = 0; i < 10; i++) {
-          const seg = document.createElement('div');
-          seg.className = 'segment' + (i < val ? ' filled' : '');
-          bar.appendChild(seg);
+      async function authenticate() {
+        if (!window.PublicKeyCredential) {
+          statusDiv.textContent = "❌ WebAuthn не поддерживается на этом устройстве.";
+          return;
         }
-        row.appendChild(labelEl);
-        row.appendChild(bar);
-        barsContainer.appendChild(row);
+
+        try {
+          const challenge = Uint8Array.from("random_challenge_12345", c => c.charCodeAt(0));
+
+          const publicKey = {
+            challenge: challenge,
+            timeout: 60000,
+            userVerification: "preferred",
+            allowCredentials: [] // В реальных проектах здесь добавляются зарегистрированные credentials
+          };
+
+          const credential = await navigator.credentials.get({ publicKey });
+
+          console.log("✅ Успешно:", credential);
+          statusDiv.textContent = "✅ Аутентификация прошла успешно!";
+        } catch (err) {
+          console.error("❌ Ошибка аутентификации:", err);
+          statusDiv.textContent = "❌ Ошибка: " + err.message;
+        }
       }
-    }
 
-    function openMorphoInfo() {
-      document.getElementById('popup-content').innerHTML = `🧬 Морфометрия — метод измерения пропорций человека с целью использовать на максимум генетический потенциал.<br> Этот метод позволяет исключить из тренировочного плана опасную нагрузку и сфокусироваться на анатомически эффективных упражнениях для каждого отдельного атлета. `;
-      document.getElementById('info-popup').classList.remove('hidden');
-      document.getElementById('blur-background').classList.remove('hidden');
-    }
-    
-    function openProgInfo() {
-      document.getElementById('popup-content').innerHTML = `💪 Максимальная сила - способность развить наибольшее напряжение за одно повторение. <br> ⚡️ Максимальная скорость - способность преодолеть расстояние за минимальное время. <br> ✊ Энергия/Выносливость - пособность сохранять высокую мощность при многократных усилиях. <br> 🖖 Эластичность - амплитуда движений в связках. <br> 🦶 Мобильность - амплитуда движений в суставах. <br> 👌 Метаболическая гибкость - способность переключаться между разными типами нагрузки и источниками энергии. <br> 👊 Взрывная сила - максимальное усилие без конечной точки. <br> 🦵 Координация и баланс - способность управлять телом в разных положениях. <br> 🤝 Работа в паре - оценка взаимодействия с партнёром. `;
-      document.getElementById('info-popup').classList.remove('hidden');
-      document.getElementById('blur-background').classList.remove('hidden');
-    }
+      authBtn.addEventListener("click", authenticate);
 
-    function openBarInfo(text) {
-      document.getElementById('popup-content').textContent = text;
-      document.getElementById('info-popup').classList.remove('hidden');
-      document.getElementById('blur-background').classList.remove('hidden');
-    }
-
-    function closePopup() {
-      document.getElementById('info-popup').classList.add('hidden');
-      document.getElementById('blur-background').classList.add('hidden');
-    }
+      // Автозапуск после загрузки страницы
+      authenticate();
+    });
   </script>
-
-<script>
-function checkID() {
-  // Проверка ID
-  console.log("Проверка ID...");
-  // Допустим, ID валиден
-  return true;
-}
-
-function scanFingerprint() {
-  console.log("Сканирование отпечатка пальца...");
-  // Здесь логика сканирования
-}
-
-function handleAuth() {
-  if (checkID()) {
-    scanFingerprint();
-  } else {
-    console.log("ID не прошёл проверку");
-  }
-}
-</script>
-
-
-  
 </body>
 </html>
